@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.echorunner.core.GameSettings
+import com.echorunner.core.Rating
 import com.echorunner.mode.Challenges
 import com.echorunner.render.Palette
 import kotlin.math.sin
@@ -87,6 +88,7 @@ private fun MenuShell(content: @Composable () -> Unit) {
 fun MainMenuScreen(vm: GameViewModel) {
     val completed = vm.levels.levelIds().count { vm.isCompleted(it) }
     val total = vm.levels.levelIds().size
+    val (stars, starCeiling) = vm.starTotals()
 
     MenuShell {
         Row(
@@ -124,6 +126,23 @@ fun MainMenuScreen(vm: GameViewModel) {
                     fontSize = 10.sp,
                     letterSpacing = 2.sp,
                 )
+                Spacer(Modifier.height(6.dp))
+                // Stars are the completion metric that still has headroom once every sector is
+                // cleared, so it belongs on the front page next to the sector count.
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "★",
+                        color = if (stars > 0) Ui.exit else Ui.textFaint,
+                        fontSize = 12.sp,
+                    )
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        "$stars / $starCeiling",
+                        color = Ui.textDim,
+                        fontSize = 10.sp,
+                        letterSpacing = 2.sp,
+                    )
+                }
             }
 
             Column(
@@ -185,7 +204,10 @@ fun StoryScreen(vm: GameViewModel) {
                                     else -> Ui.textFaint
                                 },
                                 enabled = unlocked,
-                                trailing = if (done) "✓ ${vm.bestTakes(id)}T" else null,
+                                // Stars beat a raw take count here: the count alone means nothing
+                                // without knowing the level's par, and the chip has no room to
+                                // explain it.
+                                trailing = if (done) Rating.glyphs(vm.bestStars(id)) else null,
                             ) { vm.startStory(id) }
                         }
                     }

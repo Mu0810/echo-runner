@@ -112,6 +112,7 @@ class GameActivity : ComponentActivity() {
                 vm.input.pressInteract(); true
             }
             KeyEvent.KEYCODE_R -> { vm.restartTake(); true }
+            KeyEvent.KEYCODE_B, KeyEvent.KEYCODE_TAB -> { vm.bankTake(); true }
             KeyEvent.KEYCODE_P, KeyEvent.KEYCODE_BUTTON_START -> { vm.togglePause(); true }
             else -> super.onKeyDown(keyCode, event)
         }

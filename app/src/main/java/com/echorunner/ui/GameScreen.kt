@@ -38,6 +38,7 @@ import com.echorunner.core.GameMode
 import com.echorunner.core.GamePhase
 import com.echorunner.core.GameSettings
 import com.echorunner.core.LevelSpec
+import com.echorunner.core.Rating
 import com.echorunner.engine.StepAccumulator
 import com.echorunner.render.GameRenderer
 import com.echorunner.render.Palette
@@ -135,6 +136,8 @@ fun GameScreen(
             maxEchoes = level?.maxEchoes ?: 0,
             endlessRoom = if (play.mode == GameMode.ENDLESS) vm.endlessRoom else null,
             endlessScore = if (play.mode == GameMode.ENDLESS) vm.endlessScore else null,
+            canBank = phase == GamePhase.PLAYING && !paused && echoCount < (level?.maxEchoes ?: 0),
+            onBank = vm::bankTake,
             onPause = vm::togglePause,
             onRestart = vm::restartTake,
         )
@@ -163,11 +166,21 @@ fun GameScreen(
                 subtitle = "Restarting the room",
                 tint = Ui.textDim,
             )
-            phase == GamePhase.COMPLETE -> Banner(
-                title = "CLEAR",
-                subtitle = level?.name ?: "",
-                tint = Ui.exit,
-            )
+            phase == GamePhase.COMPLETE -> {
+                // Computed live rather than read from vm.lastStars: that field is written when
+                // the host advances, which happens AFTER this hold elapses, so it would still be
+                // zero here. The inputs are the same, so the two never disagree.
+                val w = vm.engine.world
+                val takes = (w?.takeIndex ?: 0) + 1
+                val stars = Rating.starsFor(takes, level?.parTakes ?: 1, w?.deaths ?: 0)
+                CompleteBanner(
+                    levelName = level?.name ?: "",
+                    stars = stars,
+                    takes = takes,
+                    par = (level?.parTakes ?: 1).coerceAtLeast(1),
+                    deaths = w?.deaths ?: 0,
+                )
+            }
         }
     }
 }
@@ -190,6 +203,8 @@ private fun Hud(
     maxEchoes: Int,
     endlessRoom: Int?,
     endlessScore: Int?,
+    canBank: Boolean,
+    onBank: () -> Unit,
     onPause: () -> Unit,
     onRestart: () -> Unit,
 ) {
@@ -263,6 +278,15 @@ private fun Hud(
 
         Spacer(Modifier.weight(1f))
 
+        // BANK ends the take immediately and freezes what you did into an Echo. Without it a
+        // player who finished their part of the choreography in eight seconds still had to stand
+        // around for the remaining twenty-two, which is dead time in a game entirely about
+        // deliberate performances. Hidden when the level grants no Echoes (nothing to bank into)
+        // or the budget is spent, since it would do nothing.
+        if (canBank) {
+            TextButtonChip(label = "BANK", tint = Palette.echo(echoCount), onClick = onBank)
+            Spacer(Modifier.width(8.dp))
+        }
         HudButton("RESTART", onRestart)
         Spacer(Modifier.width(8.dp))
         HudButton("PAUSE", onPause)
@@ -325,6 +349,87 @@ private fun IntroOverlay(level: LevelSpec?, onDismiss: () -> Unit) {
                 fontSize = 10.sp,
                 letterSpacing = 3.sp,
             )
+        }
+    }
+}
+
+/**
+ * Level-complete card: the rating, then the numbers that produced it.
+ *
+ * Stars appear one at a time rather than all at once — the stagger is what makes a three-star
+ * solve feel earned instead of merely reported.
+ */
+@Composable
+private fun CompleteBanner(
+    levelName: String,
+    stars: Int,
+    takes: Int,
+    par: Int,
+    deaths: Int,
+) {
+    // Drives the stagger. One pass only; the banner is torn down when the hold ends.
+    var shown by remember(levelName, stars) { mutableIntStateOf(0) }
+    LaunchedEffect(levelName, stars) {
+        shown = 0
+        repeat(Rating.MAX_STARS) {
+            kotlinx.coroutines.delay(190)
+            shown += 1
+        }
+    }
+
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = "CLEAR",
+                color = Ui.exit,
+                fontSize = 30.sp,
+                letterSpacing = 8.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = levelName.uppercase(),
+                color = Ui.textFaint,
+                fontSize = 10.sp,
+                letterSpacing = 3.sp,
+            )
+
+            Spacer(Modifier.height(18.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                repeat(Rating.MAX_STARS) { i ->
+                    val earned = i < stars
+                    val visible = i < shown
+                    Text(
+                        text = if (earned) "★" else "☆",
+                        color = when {
+                            !visible -> Color.Transparent
+                            earned -> Ui.exit
+                            else -> Ui.textFaint
+                        },
+                        fontSize = 30.sp,
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
+            Text(
+                // Takes are the score, so lead with them and show par for context.
+                text = "$takes ${if (takes == 1) "TAKE" else "TAKES"}   ·   PAR $par" +
+                    if (deaths > 0) "   ·   $deaths LOST" else "   ·   NO LOSSES",
+                color = Ui.textDim,
+                fontSize = 11.sp,
+                letterSpacing = 1.5.sp,
+            )
+            if (stars < Rating.MAX_STARS) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = if (takes > par) "SOLVE IT IN $par TO GO CLEAN"
+                    else "SOLVE IT WITHOUT LOSING A TAKE",
+                    color = Ui.textFaint,
+                    fontSize = 10.sp,
+                    letterSpacing = 1.5.sp,
+                )
+            }
         }
     }
 }
