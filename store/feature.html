@@ -1,0 +1,92 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  /* Play feature graphic: exactly 1024x500, and it must be FLAT - no alpha channel. */
+  html,body{margin:0;padding:0;background:#05060B;width:1024px;height:500px;overflow:hidden}
+  svg{display:block}
+  /* System mono only: no web fonts, so rendering is deterministic offline. */
+  .mono{font-family:"SF Mono",Menlo,Monaco,"Courier New",monospace}
+</style></head><body>
+<svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="fogA" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#14263C" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#14263C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="fogB" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E879F9" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#E879F9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="portal" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#A78BFA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"  stop-color="#B8C9DE" stop-opacity="0.1"/>
+      <stop offset="18%" stop-color="#B8C9DE" stop-opacity="0.9"/>
+      <stop offset="88%" stop-color="#B8C9DE" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#B8C9DE" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="500" fill="#05060B"/>
+
+  <g stroke="#17202F" stroke-width="1.2" opacity="0.9">
+    <path d="M0 62H1024M0 124H1024M0 186H1024M0 248H1024M0 310H1024M0 372H1024M0 434H1024"/>
+    <path d="M62 0V500M124 0V500M186 0V500M248 0V500M310 0V500M372 0V500M434 0V500M496 0V500M558 0V500M620 0V500M682 0V500M744 0V500M806 0V500M868 0V500M930 0V500M992 0V500"/>
+  </g>
+
+  <ellipse cx="250" cy="190" rx="420" ry="300" fill="url(#fogA)"/>
+  <ellipse cx="880" cy="360" rx="330" ry="240" fill="url(#fogB)"/>
+
+  <!-- ── Type block ──────────────────────────────────────────────────────────
+       Cyan is the player, magenta is the Echo. Splitting the two words across
+       those colours states the premise before anyone reads the tagline. -->
+  <text class="mono" x="62" y="196" fill="#E8EEF6" font-size="86" font-weight="700" letter-spacing="14">ECHO</text>
+  <text class="mono" x="62" y="292" fill="#E879F9" font-size="86" font-weight="700" letter-spacing="14">RUNNER</text>
+  <text class="mono" x="66" y="344" fill="#4C5A6E" font-size="19" font-weight="500" letter-spacing="10">THE WORLD REMEMBERS</text>
+  <rect x="64" y="378" width="66" height="2" fill="#22D3EE" opacity="0.85"/>
+  <text class="mono" x="66" y="416" fill="#8494A8" font-size="17" letter-spacing="2.5">30 rooms · solve them with yourself</text>
+
+  <!-- ── Level slice ─────────────────────────────────────────────────────────
+       A readable diagram of the actual mechanic: two Echoes pinned on plates
+       holding a door open while the live player walks through to the exit. -->
+  <g transform="translate(556, 0)">
+    <!-- floor -->
+    <rect x="0" y="404" width="452" height="46" fill="#0B0F18"/>
+    <rect x="0" y="403" width="452" height="2.5" fill="url(#edge)"/>
+
+    <!-- pressure plates, lit because bodies are on them -->
+    <rect x="34" y="396" width="52" height="7" fill="#34D399" opacity="0.9"/>
+    <rect x="132" y="396" width="52" height="7" fill="#34D399" opacity="0.9"/>
+
+    <!-- retracted door: open because both plates are held -->
+    <rect x="250" y="300" width="15" height="104" fill="#0B0F18" opacity="0.9"/>
+    <rect x="250" y="300" width="15" height="3" fill="#B8C9DE" opacity="0.55"/>
+    <g stroke="#B8C9DE" stroke-width="1" opacity="0.22" stroke-dasharray="5 7">
+      <path d="M257 306V400"/>
+    </g>
+
+    <!-- exit portal -->
+    <circle cx="392" cy="368" r="62" fill="url(#portal)"/>
+    <rect x="378" y="342" width="29" height="52" rx="12" fill="none" stroke="#A78BFA" stroke-width="2.4"/>
+
+    <!-- Echo 1 on the first plate -->
+    <g opacity="0.42" transform="translate(46,336) scale(0.80)">
+      <circle cx="14" cy="10" r="7" fill="#E879F9"/>
+      <path d="M12,20 L20,20 L25,38 L19,41 L15,30 L15,58 L8,58 L8,42 L1,58 L-6,55 L4,34 Z" fill="#E879F9"/>
+    </g>
+    <!-- Echo 2 on the second plate, different hue so timelines are distinguishable -->
+    <g opacity="0.42" transform="translate(144,336) scale(0.80)">
+      <circle cx="14" cy="10" r="7" fill="#2DD4BF"/>
+      <path d="M12,20 L20,20 L25,38 L19,41 L15,30 L15,58 L8,58 L8,42 L1,58 L-6,55 L4,34 Z" fill="#2DD4BF"/>
+    </g>
+    <!-- the live player, mid-stride, heading for the open door -->
+    <g transform="translate(196,330) scale(0.92)">
+      <circle cx="14" cy="10" r="7.5" fill="#22D3EE"/>
+      <path d="M12,20 L20,20 L25,38 L19,41 L15,30 L15,58 L8,58 L8,42 L1,58 L-6,55 L4,34 Z" fill="#22D3EE"/>
+    </g>
+  </g>
+
+  <rect width="1024" height="500" fill="none" stroke="#05060B" stroke-width="16" opacity="0.5"/>
+</svg>
+</body></html>

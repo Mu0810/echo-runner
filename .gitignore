@@ -35,3 +35,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Raw emulator screenshots: 2 MB each and regenerable with adb exec-out screencap.
+# The small rendered store graphics (icon, feature) ARE tracked, since they are the
+# deliverables and their HTML sources live beside them.
+store/shot-*.png
+store/feature-1024x500.png

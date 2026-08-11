@@ -7,6 +7,12 @@ yourself.
 
 30 levels across 7 chapters, plus Endless and Challenge modes.
 
+![An Echo replaying a recorded walk on level 1-2](docs/echo-loop.gif)
+
+*Level 1-2, take two. The cyan player stands at spawn while the magenta Echo — a recording of
+what the player did during take one — walks the same path on its own, trailing particles. The
+filled pip under ECHOES is the recorded timeline; MEMORY counts down the current take.*
+
 ## Build
 
 ```bash
