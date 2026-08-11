@@ -1,0 +1,35 @@
+{
+  "id": "2-2",
+  "name": "Quorum",
+  "chapter": 2,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 3,
+  "spawn": [3, 18.45],
+  "exit": [37, 11.1, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Three takes — the door needs p1 AND p2 held at the same moment, and the plates are 8 units apart (p1 x=5.5..7.5, p2 x=15.5..17.5) so one 0.8-wide body can never cover both. TAKE 1: walk right onto p1, stand, end the take. TAKE 2: Echo A now holds p1; walk past it onto p2, stand, end the take. Both plates are held during this take, but you are pinned on p2 — stepping off shuts the door 0.35s later and the doorway at x=26 is 10.7 units away (1.16s), so you cannot cash it in yourself. TAKE 3: Echoes A and B hold both plates, the door is open by about t=1.9s and you reach it at about t=2.6s. Run right through the doorway, continue to about x=31, then jump UP THROUGH the one-way grating at y=16.8 (a 3.2-unit rise, inside the 3.4 budget) and land on top of it. Run right along the grating to about x=32 and jump again — another 3.2 up — onto the ledge at y=13.6 whose left edge is x=33, then walk right into the exit at x=37. The ledge is 6.4 units above the floor, which no jump can reach, so the grating is the only way up; miss the second jump and the grating catches you.",
+  "dialogue": [
+    { "speaker": "", "text": "Two plates. One door. You have one body." },
+    { "speaker": "ECHO-0", "text": "So make three. Two to stand still, one to leave." },
+    { "speaker": "", "text": "The grating past the door only holds from below. Jump up through it." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [24.5, 0, 4.2, 14], "kind": "SOLID" },
+    { "rect": [29.5, 16.8, 6.5, 0.4], "kind": "ONE_WAY" },
+    { "rect": [33, 13.6, 7, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [5.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [15.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [26, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p1", "p2"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "2-5",
+  "name": "Not Your Weight",
+  "chapter": 2,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 3,
+  "spawn": [3, 18.45],
+  "exit": [36.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Three takes, and the first plate will not read you. p1 at x=7.0..9.2 is ECHO-ONLY: stand on it as the player and nothing happens at all — d1 at x=14 stays sealed, and its bulkhead runs from y=14 to y=0 so there is no route over it. Only a recording presses it. TAKE 1: walk right 4.6 units from spawn (x=3, floor top y=20) onto p1, arriving at about t=0.5s, and stand there. Nothing opens. End the take anyway — spending a whole timeline on a plate that ignores you IS the solution. TAKE 2: Echo A now steps onto p1 at t≈0.5s and d1 sweeps open by t≈0.85s. Run right; you reach the doorway at x=14 at t≈1.2s, well after it opened, pass through and continue 5.5 units to plate p2 at x=19.5..21.7 — an ordinary plate, which does read you — and stand on it at t≈1.8s. d2 at x=30 opens while you stand, but it is 8.3 units and a 4.0-unit pit away, about 1.15s of travel against a 0.35s close, so you can never cash this one in yourself. End the take on p2. TAKE 3: Echo A holds p1 (d1 open from t≈0.85s) and Echo B holds p2 (d2 open from t≈2.15s); an Echo keeps pressing a plate after its recording runs out, so both stay down. Run right from spawn: through d1 at t≈1.2s, straight over both plates — p1 ignores your feet on the way past, which is the joke of the room — off the floor edge at x=24 at t≈2.28s, clear the 4.0-unit pit (inside the 6.0 budget) and land at about x=28.3 at t≈2.73s, through d2 at x=30 at t≈2.95s and into the exit at x=36.5 by t≈3.65s. Neither plate latches, so if either Echo steps off, its door shuts 0.35s later — record both takes ending stationary on the plate, not walking away from it.",
+  "dialogue": [
+    { "speaker": "", "text": "Stand on the first plate. Nothing. It is calibrated to something you are not any more." },
+    { "speaker": "ECHO-0", "text": "It reads recordings, not bodies. So give it a recording." },
+    { "speaker": "", "text": "Two takes spent standing still. The third one is the only one that gets to leave." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 24, 2.5], "kind": "SOLID" },
+    { "rect": [28, 20, 12, 2.5], "kind": "SOLID" },
+    { "rect": [12.7, 0, 3.8, 14], "kind": "SOLID" },
+    { "rect": [28.7, 0, 3.8, 14], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [24, 21, 4, 1.5], "kind": "PIT" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [7.0, 19.6, 2.2, 0.4], "latching": false, "echoOnly": true },
+    { "id": "p2", "rect": [19.5, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [14, 14, 1.2, 6], "opensWhen": "p1", "travelSeconds": 0.35 },
+    { "id": "d2", "rect": [30, 14, 1.2, 6], "opensWhen": "p2", "travelSeconds": 0.35 }
+  ]
+}

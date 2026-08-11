@@ -1,0 +1,48 @@
+{
+  "id": "4-1",
+  "name": "Something To Watch",
+  "chapter": 4,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 3,
+  "spawn": [2, 18.45],
+  "exit": [37, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Three takes. The walker patrols the floor between x=14 and x=30 and will not leave that span even while chasing, and the turret at the far right sweeps the floor from x=12 rightward. Note the walker locks onto whichever body it noticed and keeps chasing THAT one while it stays in range, which is what makes an Echo usable as bait. TAKE 1: walk right onto plate p1 (x=4..6) and stand there; this holds the turret offline. p1 is 8 units from the walker's left bound, just outside its 7-unit alert range, so nothing comes for you. End the take standing on it. TAKE 2: Echo A now holds p1. Hop up the step at x=9..11.2 (a 1.6 rise) then up onto the perch at x=12..14.6 (a 1.8 rise) and stand. The walker comes to its left bound at x=14 and stares up at you, but it is a ground unit and the perch is 3.6 units above the floor, so it cannot reach you. End the take on the perch. TAKE 3: Echo A holds the turret offline, Echo B stands on the perch and holds the walker pinned at x=14 for the whole take. Take the same climb, jump the 1.4-unit gap from the perch onto the ledge at x=16..28, run right along it above the walker's head, drop off its right end at x=28 onto the floor, and run to the exit at x=37 through a lane the turret can no longer fire down. Without the bait the walker roams as far as x=30 and meets you where you land.",
+  "dialogue": [
+    { "speaker": "", "text": "It sweeps the corridor. Patient. It has done this a long time." },
+    { "speaker": "ECHO-0", "text": "It cannot tell us apart. Give it one of us to follow." },
+    { "speaker": "", "text": "Stand somewhere it can see you and never reach you. Then walk over it." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [9, 18.4, 2.2, 0.5], "kind": "SOLID" },
+    { "rect": [12, 16.6, 2.6, 0.5], "kind": "SOLID" },
+    { "rect": [16, 16.6, 12, 0.6], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [22, 18.7],
+      "minX": 14,
+      "maxX": 30,
+      "speed": 2.6,
+      "alertRange": 7,
+      "chaseMultiplier": 1.7
+    }
+  ],
+  "turrets": [
+    {
+      "id": "t1",
+      "rect": [38.4, 18.9, 1.4, 1.5],
+      "dirX": -1,
+      "intervalSeconds": 1.5,
+      "bulletSpeed": 11,
+      "range": 26,
+      "disabledWhen": "p1"
+    }
+  ]
+}

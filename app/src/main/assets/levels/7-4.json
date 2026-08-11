@@ -1,0 +1,82 @@
+{
+  "id": "7-4",
+  "name": "The Last Room Remembers Everything",
+  "chapter": 7,
+  "takeSeconds": 30,
+  "maxEchoes": 5,
+  "parTakes": 6,
+  "spawn": [2, 18.45],
+  "exit": [37, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Six takes, and the room uses every trick it ever taught you. p1 at x=4 LATCHES — cross it once and it stays on, powering lift m1 at x=24..28. The teleporter pad at x=8 emits you at x=18, which is how you skip walker w1 patrolling x=11..17. Up on the deck, p2 at x=32 reads recordings ONLY and shuts down both the laser at x=30 and the turret at the far right. Down on the floor, p3 at x=20 and p4 at x=22 together open the door at x=33.5. TAKE 1: walk across p1 — it latches, no standing required — then step into the pad at x=8 and look around the far side. TAKE 2: Echo A trips p1 at t=0.4s so the lift is already climbing. Teleport to x=18, run right and board m1 at about t=2.4s while its deck is low, ride from y=19 to y=12, cross the 1-unit gap onto the deck at x=29..39, and stand on p2 at x=32. Nothing lights up while YOU stand there; that is the point of it. TAKE 3: Echo B on p2 now kills the laser and the turret for good. Teleport, then stand on p3 at x=20. TAKE 4: teleport, stand on p4 at x=22 — the door at x=33.5 opens as soon as both are held, but you are pinned on the plate. TAKE 5: spend a take on insurance: teleport and stand in the turret lane at about x=28, where your recording will body-block anything the turret manages to fire before Echo B silences it. TAKE 6: the lift is armed, the beam is dead, the gun is dead, the door is open and the guard is chasing a recording. Teleport past it, run right along the floor, straight through the doorway at x=33.5, and walk into the exit at x=37. Every hazard in the last room of the game is being held shut by somebody who used to be you.",
+  "dialogue": [
+    { "speaker": "", "text": "Last room. Everything it knows how to do, it is doing at once." },
+    { "speaker": "ECHO-0", "text": "Five of us. That is all you get. It is enough if you spend us properly." },
+    { "speaker": "", "text": "Walk out. Do not look back at the ones still standing there." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [29, 12, 10, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": true, "echoOnly": false },
+    { "id": "p2", "rect": [32, 11.6, 2.0, 0.4], "latching": false, "echoOnly": true },
+    { "id": "p3", "rect": [20, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p4", "rect": [22, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [33.5, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p3", "p4"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[24, 19], [24, 12]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [30, 14, 0.3, 6],
+      "onSeconds": 2.6,
+      "offSeconds": 0.5,
+      "phase": 0,
+      "disabledWhen": "p2"
+    }
+  ],
+  "turrets": [
+    {
+      "id": "t1",
+      "rect": [38.4, 18.9, 1.4, 1.5],
+      "dirX": -1,
+      "intervalSeconds": 1.3,
+      "bulletSpeed": 10,
+      "range": 14,
+      "disabledWhen": "p2"
+    }
+  ],
+  "teleporters": [
+    { "id": "tp1", "a": [8, 17, 1.2, 3], "b": [18, 17, 1.2, 3], "cooldownSeconds": 0.8 }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [14, 18.7],
+      "minX": 11,
+      "maxX": 17,
+      "speed": 2.6,
+      "alertRange": 6,
+      "chaseMultiplier": 1.7
+    }
+  ]
+}

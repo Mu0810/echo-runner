@@ -1,0 +1,57 @@
+{
+  "id": "7-1",
+  "name": "What You Leave Behind",
+  "chapter": 7,
+  "takeSeconds": 30,
+  "maxEchoes": 4,
+  "parTakes": 5,
+  "spawn": [2, 18.45],
+  "exit": [38.2, 5.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Five takes, and each one only becomes possible because of the one before it. TAKE 1: walk right across plate p1 at x=4..6. It LATCHES — you do not have to stand on it, and it stays on for the rest of the take, which powers lift m1 at x=12..16. Finish the take anywhere. TAKE 2: Echo A trips p1 at about t=0.4s, so m1 is already climbing when you get there; board it at about t=1.1s while the deck is level with the floor and ride from y=19 to y=13, step across the 1-unit gap onto the gantry at x=17..23, and stand on p2 at x=19. p2 reads recordings only, so nothing happens while you personally stand there — that is expected. TAKE 3: Echo B is on p2 now, so door d1 at x=23.5 is open. Ride up, cross the gantry, through the doorway onto the catwalk at x=25..30, and press switch s1 at x=27. It holds for 8 seconds and powers lift m2 at x=31..35, but you are on the wrong floor to use it — this take exists to record the press. TAKE 4: ride m1, cross, pass d1, walk the catwalk, and board m2 as Echo C's switch brings it level with the catwalk at y=13; ride to y=8, step onto the top deck at x=35..40, and stand on p4 at x=35.2. That opens the last door d2 at x=37.6. TAKE 5: every stair is held by someone. Ride, cross, pass, board, ride again, and walk through the final doorway into the exit at x=38.2 — about eleven seconds of climbing over four earlier versions of yourself.",
+  "dialogue": [
+    { "speaker": "", "text": "Four of you holding the building open. None of them will see the top." },
+    { "speaker": "ECHO-0", "text": "They knew that when they stopped walking." },
+    { "speaker": "", "text": "No. You knew it. They only did what you did." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [17, 13, 6, 0.8], "kind": "SOLID" },
+    { "rect": [25, 13, 5, 0.8], "kind": "SOLID" },
+    { "rect": [35, 8, 5, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": true, "echoOnly": false },
+    { "id": "p2", "rect": [19, 12.6, 2.0, 0.4], "latching": false, "echoOnly": true },
+    { "id": "p4", "rect": [35.2, 7.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [27, 11.6, 1.0, 1.4], "holdSeconds": 8, "startsOn": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [23.5, 7, 1.2, 6], "opensWhen": "p2", "travelSeconds": 0.35 },
+    { "id": "d2", "rect": [37.6, 2, 1.2, 6], "opensWhen": "p4", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[12, 19], [12, 13]],
+      "speed": 1.7,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    },
+    {
+      "id": "m2",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[31, 13], [31, 8]],
+      "speed": 1.8,
+      "mode": "SIGNAL",
+      "activeWhen": "s1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ]
+}

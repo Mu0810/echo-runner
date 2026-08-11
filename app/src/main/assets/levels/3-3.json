@@ -1,0 +1,38 @@
+{
+  "id": "3-3",
+  "name": "Three Floors",
+  "chapter": 3,
+  "takeSeconds": 30,
+  "maxEchoes": 3,
+  "parTakes": 4,
+  "spawn": [2, 18.45],
+  "exit": [35.2, 11.1, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Four takes, and the choreography is a climb, not a row: d1 needs p1 AND p2 AND p3, and they sit on three different floors — p1 on the ground at y=20 (x=4..6), p2 on the one-way grating at y=16.8 (x=10..12), p3 on the ledge at y=13.6 (x=16.5..18.5). Each is 3.2 above the last, one jump apiece, and no single body can span two floors. TAKE 1: walk 2.1 units right from spawn onto p1 and stand. Echo A holds it from about t=0.3s. TAKE 2: run right to about x=9.8 (6.8 units, 0.8s), stop, and jump straight UP through the grating at y=16.8 (a 3.2 rise) — you pass through from below and land on top at about t=1.6s. Step right onto p2 and stand; Echo B holds it from about t=1.9s. TAKE 3: repeat the climb to the grating (on top by t=1.6s), then run to its right edge (x=13.0) and jump 2.0 across and 3.2 up onto the ledge at y=13.6 (x=15..19.5), landing about x=15.5 at t=2.7s. Walk 2 units right onto p3 and stand; Echo C holds it from about t=3.0s. All three plates are down during this take, but you are pinned on p3 at the top of the left tower — the doorway is 15 units right and on a separate tower, and d1 shuts 0.35s after p3 releases, so it cannot be cashed in from up here. TAKE 4: Echo A holds p1 from 0.3s, Echo B holds p2 from 1.9s, Echo C reaches p3 at 3.0s, so d1 starts opening at 3.0s and is fully clear by 3.35s. Stay on the ground and run right the whole way: 22 units from spawn to about x=25 takes 2.45s. Stop and jump straight UP through the second grating at y=16.8 (x=24..29), landing on top at about t=3.25s. Run to its right edge (x=29) and jump 2.0 across and 3.2 up onto the gallery at y=13.6 (x=31..37), landing about x=31.5 at t=4.05s — the gallery is 6.4 above the ground, so no jump reaches it from the floor and the grating is the only way. Run 1.5 units right through the open doorway at x=33 (t=4.3s, a full second after it finished opening) and into the exit at x=35.2. The door is 4.5 tall with a bulkhead above it sealing x=32.2..35.0 to y=0, so the gallery is split and there is no arc over. (Optional shortcut on take 4: from p3's ledge you can drop 4.5 across and 3.2 down onto the right grating, but starting from the floor is faster.)",
+  "dialogue": [
+    { "speaker": "", "text": "Three plates. None of them on the same floor." },
+    { "speaker": "ECHO-0", "text": "Climb, stand, rewind. Climb higher, stand, rewind. The tower fills from the bottom up." },
+    { "speaker": "", "text": "By the last take it will be holding itself open, and you will just be the one who walks out." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [8.5, 16.8, 4.5, 0.4], "kind": "ONE_WAY" },
+    { "rect": [15, 13.6, 4.5, 0.6], "kind": "SOLID" },
+    { "rect": [24, 16.8, 5.0, 0.4], "kind": "ONE_WAY" },
+    { "rect": [31, 13.6, 6.0, 0.8], "kind": "SOLID" },
+    { "rect": [32.2, 0, 2.8, 9.1], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [10, 16.4, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [16.5, 13.2, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [33, 9.1, 1.2, 4.5],
+      "opensWhen": { "ids": ["p1", "p2", "p3"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ]
+}

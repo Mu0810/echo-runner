@@ -1,0 +1,46 @@
+{
+  "id": "5-1",
+  "name": "Someone Has To Stay Down There",
+  "chapter": 5,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 2,
+  "spawn": [2, 18.45],
+  "exit": [26, 7.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes are enough; you are given a third as slack. The lift at x=16..20 only climbs while plate p1 (x=5..7.2) is held, and p1 is on the floor 9 units below where the lift ends, so you can never be both the power and the passenger. TAKE 1: run right onto p1 and stand. The lift rises behind you from y=19 to y=10 at 1.6 u/s, taking about 5.6s, and stays up while you hold the plate. End the take on the plate. TAKE 2: Echo A steps onto p1 at about t=0.35s and the lift starts climbing. Run right and jump onto it at about t=1.5s, when its deck has only risen to about y=17.1 and is a 1.3-unit hop from the floor. Ride it up to y=10, step across the 1-unit gap onto the ledge at x=21..29, then deal with the laser at x=23.5: it burns for 1.4s and is dark for 1.6s, so wait on the ledge for it to go out and walk through during the gap. The exit sits on the ledge at x=26. Board late and the deck is above your jump; board early and you simply ride longer.",
+  "dialogue": [
+    { "speaker": "", "text": "The lift takes weight to run. Not cargo. Weight on the plate, down here." },
+    { "speaker": "ECHO-0", "text": "Then one of us rides and one of us never sees the top." },
+    { "speaker": "", "text": "You have already decided which. You did it a minute ago." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [21, 10, 8, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [5, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[16, 19], [16, 10]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [23.5, 6.5, 0.3, 3.5],
+      "onSeconds": 1.4,
+      "offSeconds": 1.6,
+      "phase": 0,
+      "disabledWhen": null
+    }
+  ]
+}

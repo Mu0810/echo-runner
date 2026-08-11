@@ -1,0 +1,50 @@
+{
+  "id": "6-3",
+  "name": "The Long Way Round",
+  "chapter": 6,
+  "takeSeconds": 30,
+  "maxEchoes": 4,
+  "parTakes": 5,
+  "spawn": [2, 18.45],
+  "exit": [35, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Five takes. Walker w1 owns the whole middle of the floor from x=12 to x=26, and the door at x=30 needs three plates held at once — all three sitting inside that middle. The teleporter is how you get past it: step into pad A at x=4 and you are emitted from pad B at x=20, on the far side of the guard. Only YOU teleport; an Echo never does, which does not matter because an Echo cannot be killed. TAKE 1: walk to the step at x=9..11.2 (a 1.8 rise, and still left of the walker's span) and up onto the perch at x=11.8 (a 2.4 rise). Stand. w1 gathers below at its left bound near x=12 and cannot reach you. TAKE 2: Echo A has w1 pinned at the far left of its span for good. Walk into pad A at x=4, arrive at pad B at x=20, then walk to p1 at x=16..18 and stand — it is 4 units from the pinned walker but the walker is locked onto the Echo it noticed first and will not switch. TAKE 3: same route, stand on p2 at x=21. TAKE 4: same route, stand on p3 at x=24.5. TAKE 5: all four Echoes are holding — the guard is watching the perch and the three plates are down, so the door at x=30 is open by about t=2s. Teleport, walk right through the doorway, and into the exit at x=35.",
+  "dialogue": [
+    { "speaker": "", "text": "The pads only move living weight. Your recordings walk." },
+    { "speaker": "ECHO-0", "text": "They do not mind the long way. They cannot be hurt on it." },
+    { "speaker": "", "text": "Lucky them." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [9, 18.2, 2.2, 0.5], "kind": "SOLID" },
+    { "rect": [11.8, 15.8, 2.4, 0.5], "kind": "SOLID" },
+    { "rect": [28.5, 0, 4.2, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [16, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [21, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [24.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [30, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p1", "p2", "p3"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ],
+  "teleporters": [
+    { "id": "tp1", "a": [4, 17, 1.2, 3], "b": [20, 17, 1.2, 3], "cooldownSeconds": 0.8 }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [19, 18.7],
+      "minX": 12,
+      "maxX": 26,
+      "speed": 2.6,
+      "alertRange": 6.5,
+      "chaseMultiplier": 1.7
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "2-1",
+  "name": "Five Seconds",
+  "chapter": 2,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [16, 11.45],
+  "exit": [36.4, 10.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes. TAKE 1: from spawn walk LEFT along the deck (top y=13) and step off its edge at x=12. You fall 7 units into the shaft (floor top y=20), land near x=8, walk left to switch s1 at x=3.2 and interact. You are now stranded — the shaft wall is 7 units and a jump tops out at 3.67 (5.6 even with jump held), and there is nothing to climb, so nobody who throws that switch ever leaves. End the take there. TAKE 2: your Echo repeats the drop and flips s1 at about t=1.6s, opening the door at x=31.5 for 5 seconds. Sprint RIGHT from spawn the instant the take starts: 16.7 units from x=16 to clear of the doorway at x=32.7, which is 1.82s at 9.2 u/s — inside the 5s hold with about 3.2s spare even before counting the head start you get while the Echo is still falling. Jump the 4.0-unit deck gap at x=25.5..29.5 on the way (it maintains your run speed), then walk into the exit at x=36.4. The bulkhead above the door runs to the top of the world; the doorway is the only breach.",
+  "dialogue": [
+    { "speaker": "", "text": "Sector two. The shaft below never had a ladder." },
+    { "speaker": "ECHO-0", "text": "Whoever throws that switch stays down there. Five seconds of open door is what it buys." },
+    { "speaker": "", "text": "Spend the take. Then run, and don't look into the shaft on the way past." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 12, 2.5], "kind": "SOLID" },
+    { "rect": [12, 13, 1.5, 9.5], "kind": "SOLID" },
+    { "rect": [13.5, 13, 12, 2.0], "kind": "SOLID" },
+    { "rect": [29.5, 13, 10.5, 2.0], "kind": "SOLID" },
+    { "rect": [30, 0, 4.2, 7], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [25.5, 21, 4.0, 1.5], "kind": "PIT" }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [3.2, 18.6, 1.0, 1.4], "holdSeconds": 5, "startsOn": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [31.5, 7, 1.2, 6], "opensWhen": "s1", "travelSeconds": 0.35 }
+  ]
+}

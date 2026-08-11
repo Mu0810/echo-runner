@@ -1,0 +1,45 @@
+{
+  "id": "2-3",
+  "name": "Shut Behind You",
+  "chapter": 2,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [10, 18.45],
+  "exit": [35.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes, and the door you need SHUT is the one that starts open. d1 at x=13.5 is a portcullis: open until switch s1 fires, then it seals (its bulkhead runs from y=14 up to y=0, so there is no route over it, and the west stack only climbs to y=14.4 on the wrong side of it). d2 at x=30 is the opposite — sealed until s1 fires. s1 lapses after 6 seconds, so the level contains exactly one 6-second window in which d1 is shut and d2 is open. TAKE 1: from spawn (x=10, floor top y=20) walk LEFT 3.5 units to x=6.5 and jump up-left 2.8 onto the ledge at y=17.2 (x=4.0..7.0); walk to its left edge at x=4.0 and jump up-left another 2.8 onto the ledge at y=14.4 (x=0..3.2); walk left and interact with s1 at x=1.0..2.0, at about t=1.6s. Throw it ONCE and then stand still — a second interact is recorded too and would re-toggle the switch in the replay. The moment you throw it, d1 seals 12 units below and to your right: d2 is now open but d1 is between you and it, so nobody who throws this switch ever uses it. Wait out the 6 seconds and you only trade one shut door for the other, forever. End the take up on the ledge. TAKE 2: your Echo repeats the climb and throws s1 at about t=1.6s. RUN RIGHT the instant the take starts — your body has to be past x=14.7 before the throw, which is 4.8 units, 0.52s at 9.2 u/s, so you clear the portcullis with ~0.9s to spare even against a perfectly efficient take 1. Do not stop: the floor ends at x=20, jump the 4.0-unit pit (inside the 6.0 budget) and land at about x=24.4 at t≈1.55s, reach d2 at x=30 at t≈2.16s — it swept open at about t≈1.95s — pass through and walk into the exit at x=35.5 by t≈2.8s, roughly three seconds into a six-second window. If your take 1 was slower, just run to the doorway and wait there; the window opens when the Echo throws, not when you arrive.",
+  "dialogue": [
+    { "speaker": "", "text": "That doorway is already open. The switch on the west stack is what shuts it." },
+    { "speaker": "ECHO-0", "text": "So the throw has to land after you are through. Which means it cannot be you who throws it." },
+    { "speaker": "", "text": "Six seconds of open door on the far side. Don't stop to watch the near one close." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 20, 2.5], "kind": "SOLID" },
+    { "rect": [24, 20, 16, 2.5], "kind": "SOLID" },
+    { "rect": [4.0, 17.2, 3.0, 0.8], "kind": "SOLID" },
+    { "rect": [0, 14.4, 3.2, 0.8], "kind": "SOLID" },
+    { "rect": [12.2, 0, 3.8, 14], "kind": "SOLID" },
+    { "rect": [28.7, 0, 3.8, 14], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [20, 21, 4, 1.5], "kind": "PIT" }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [1.0, 13.0, 1.0, 1.4], "holdSeconds": 6, "startsOn": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [13.5, 14, 1.2, 6],
+      "opensWhen": { "ids": ["s1"], "mode": "ALL", "invert": true },
+      "travelSeconds": 0.35
+    },
+    {
+      "id": "d2",
+      "rect": [30, 14, 1.2, 6],
+      "opensWhen": "s1",
+      "travelSeconds": 0.35
+    }
+  ]
+}

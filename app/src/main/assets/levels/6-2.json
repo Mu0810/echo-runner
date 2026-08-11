@@ -1,0 +1,51 @@
+{
+  "id": "6-2",
+  "name": "Not Your Weight",
+  "chapter": 6,
+  "takeSeconds": 30,
+  "maxEchoes": 3,
+  "parTakes": 4,
+  "spawn": [2, 18.45],
+  "exit": [35, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Four takes. Plate p2 up on the gantry reads a recording and NOT you — stand on it yourself and nothing happens at all, so the only way to switch it on is to record a take standing there and let the Echo do the work. It is also the only thing that shuts down the laser at x=31. TAKE 1: stand on p1 (x=4..6); this powers the lift at x=16..20. TAKE 2: Echo A holds p1 so the lift climbs from y=19 to y=12. Run right and board it at about t=1.5s, while its deck is only about 1.2 units above the floor, ride to the top, step across the 1-unit gap onto the gantry at x=21..28, walk to p2 at x=24 and stand. Nothing lights up — that is correct, it ignores you. End the take there. TAKE 3: Echo B is now standing on p2 and the laser goes dark. Walk to p3 (x=9..11) and stand; that opens the door at x=28.5. TAKE 4: A holds the lift, B kills the laser, C holds the door. Run straight along the floor from spawn — doorway at x=28.5 is open, the laser lane at x=31 is dead, and the exit is at x=35. You never need the lift on the last take; it was only ever there to deliver the body that is standing on that plate.",
+  "dialogue": [
+    { "speaker": "", "text": "The plate does not register you. It registers a recording." },
+    { "speaker": "ECHO-0", "text": "Then go up there and become one." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [21, 12, 7, 0.8], "kind": "SOLID" },
+    { "rect": [27, 0, 4.2, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [24, 11.6, 2.0, 0.4], "latching": false, "echoOnly": true },
+    { "id": "p3", "rect": [9, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [28.5, 14, 1.2, 6], "opensWhen": "p3", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[16, 19], [16, 12]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [31, 14, 0.3, 6],
+      "onSeconds": 2.4,
+      "offSeconds": 0.5,
+      "phase": 0,
+      "disabledWhen": "p2"
+    }
+  ]
+}

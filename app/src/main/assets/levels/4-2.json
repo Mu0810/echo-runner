@@ -1,0 +1,48 @@
+{
+  "id": "4-2",
+  "name": "Two Patrols",
+  "chapter": 4,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 3,
+  "spawn": [2, 18.45],
+  "exit": [28, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Three takes, and the two walkers are dealt with in two different ways. Walker w1 paces x=8..20 and its span contains plate p1 (x=10..12.2); walker w2 paces x=26..34 and its span contains the EXIT itself at x=28. A walker locks onto whichever body it noticed first and keeps chasing that one, and it is clamped to its own span even while chasing. TAKE 1: run right from spawn. w1 will come at you, so jump over it — you clear 3.6 units and it is only 1.3 tall — then climb the step at x=16..18.2 (a 1.8 rise) and up onto the perch at x=18.6..21 (a 2.4 rise). Stand there. w1 crowds up to its right bound near x=19 and stares, but it is a ground unit and cannot reach the perch, so you survive the take. TAKE 2: Echo A now holds w1 pinned at the RIGHT end of its span, which leaves the LEFT end clear. Walk to p1 at x=10 and stand on it — it is 9 units from the pinned walker, outside its 6.5 alert range. That opens the door at x=24. TAKE 3: Echo A pins w1, Echo B holds p1 and the door is open by about t=1.7s. Run right, pass the doorway at about t=2.6s, and you are into w2's territory. Nothing is left to bait it with, so handle w2 the other way: jump clean over it and drop into the exit at x=28. If it is walking toward you, wait a beat on the far side of the doorway and go as it turns.",
+  "dialogue": [
+    { "speaker": "", "text": "Two of them now. Different rooms, same patience." },
+    { "speaker": "ECHO-0", "text": "You only have two recordings. One goes to the first. The second you handle yourself." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [16, 18.2, 2.2, 0.5], "kind": "SOLID" },
+    { "rect": [18.6, 15.8, 2.4, 0.5], "kind": "SOLID" },
+    { "rect": [22.5, 0, 4.2, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [10, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [24, 14, 1.2, 6], "opensWhen": "p1", "travelSeconds": 0.35 }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [14, 18.7],
+      "minX": 8,
+      "maxX": 20,
+      "speed": 2.6,
+      "alertRange": 6.5,
+      "chaseMultiplier": 1.7
+    },
+    {
+      "id": "w2",
+      "spawn": [30, 18.7],
+      "minX": 26,
+      "maxX": 34,
+      "speed": 2.4,
+      "alertRange": 6.5,
+      "chaseMultiplier": 1.6
+    }
+  ]
+}

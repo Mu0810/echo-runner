@@ -1,0 +1,70 @@
+{
+  "id": "7-3",
+  "name": "Everything Is Watching",
+  "chapter": 7,
+  "takeSeconds": 30,
+  "maxEchoes": 5,
+  "parTakes": 6,
+  "spawn": [2, 18.45],
+  "exit": [36, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Six takes, and every hazard in the room is switched off by a body standing somewhere. Plate p1 at x=4 takes the turret offline; the perch at x=9.8 pins walker w1 at the LEFT end of its x=10..22 span; plates p2 (x=23) and p3 (x=26) together open the door at x=29; plate p4 (x=31.5) beyond that door kills the laser at x=33.5. TAKE 1: walk onto p1 and stand. It is outside the turret's reach and left of the walker's span, so it is safe. TAKE 2: Echo A keeps the turret dark. Climb the step at x=7..9.2 and up onto the perch at x=9.8 (1.8 then 2.4) and stand; w1 crowds beneath and cannot reach you. TAKE 3: with w1 pinned near x=10, go over its head instead of through it — climb the step and perch, hop the 0.2 gap onto the catwalk at x=12.4..22.4, run right and drop off the end onto p2 at x=23. Stand. TAKE 4: same route, drop and stand on p3 at x=26; the door at x=29 opens the moment both are held. TAKE 5: same route again, but this time carry on through the open doorway and stand on p4 at x=31.5, which puts the laser out. TAKE 6: five bodies are holding the room still — the turret is dark, the guard is staring at a recording, the door is open and the laser is dead. Take the catwalk, drop at x=22.4, and run right through the doorway, across the dead laser lane, to the exit at x=36. Everything that could kill you is being held shut by someone who used to be you.",
+  "dialogue": [
+    { "speaker": "", "text": "A gun, a guard, a door and a beam. Five of you, one of each." },
+    { "speaker": "ECHO-0", "text": "You will walk out of here alone and it will look like nothing happened." },
+    { "speaker": "", "text": "It never does." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [7, 18.2, 2.2, 0.5], "kind": "SOLID" },
+    { "rect": [9.8, 15.8, 2.4, 0.5], "kind": "SOLID" },
+    { "rect": [12.4, 15.8, 10, 0.6], "kind": "SOLID" },
+    { "rect": [27.5, 0, 4.2, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [23, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [26, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p4", "rect": [31.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [29, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p2", "p3"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [16, 18.7],
+      "minX": 10,
+      "maxX": 22,
+      "speed": 2.6,
+      "alertRange": 6.5,
+      "chaseMultiplier": 1.7
+    }
+  ],
+  "turrets": [
+    {
+      "id": "t1",
+      "rect": [38.4, 18.9, 1.4, 1.5],
+      "dirX": -1,
+      "intervalSeconds": 1.2,
+      "bulletSpeed": 10,
+      "range": 20,
+      "disabledWhen": "p1"
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [33.5, 14, 0.3, 6],
+      "onSeconds": 2.4,
+      "offSeconds": 0.5,
+      "phase": 0,
+      "disabledWhen": "p4"
+    }
+  ]
+}

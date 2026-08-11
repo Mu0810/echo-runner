@@ -1,0 +1,53 @@
+{
+  "id": "4-4",
+  "name": "Everything In The Room",
+  "chapter": 4,
+  "takeSeconds": 30,
+  "maxEchoes": 3,
+  "parTakes": 4,
+  "spawn": [2, 18.45],
+  "exit": [34, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Four takes. Three jobs need holding down and you have one body per take. Plate p2 (x=4..6) takes the turret offline; the perch at x=9.8..12.2 pins walker w1 at the LEFT end of its x=8..20 span; plate p1 (x=18..20.2) opens the door at x=24. TAKE 1: walk right onto p2 and stand. w1 crowds to its left bound at x=8 but cannot reach x<8, so you are safe two units away. TAKE 2: Echo A holds p2, so the turret stays dark. Climb the step at x=7..9.2 (1.8 rise) and up onto the perch at x=9.8 (2.4 rise) and stand — w1 gathers underneath and cannot reach you. TAKE 3: Echo B on the perch now holds w1 pinned near x=10, but that is exactly where you would have to walk, so go over it instead: climb the same step and perch, hop the 0.4 gap onto the catwalk at x=12.6..18.6, run right along it above the walker's head, and drop off its end onto p1 at x=18. Stand. TAKE 4: p2 holds the turret dark, the perch holds w1, p1 holds the door open from about t=2.4s. Take the catwalk one more time, drop at x=18.6, and run right — doorway at x=24, exit at x=34, through a lane the turret can no longer fire down and past a walker that is watching someone else.",
+  "dialogue": [
+    { "speaker": "", "text": "A gun, a guard, and a door. One of you each." },
+    { "speaker": "ECHO-0", "text": "Three standing still so the fourth can walk. You are getting used to it." },
+    { "speaker": "", "text": "That is the part that worries me." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [7, 18.2, 2.2, 0.5], "kind": "SOLID" },
+    { "rect": [9.8, 15.8, 2.4, 0.5], "kind": "SOLID" },
+    { "rect": [12.6, 15.8, 6, 0.6], "kind": "SOLID" },
+    { "rect": [22.5, 0, 4.2, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [18, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [24, 14, 1.2, 6], "opensWhen": "p1", "travelSeconds": 0.35 }
+  ],
+  "walkers": [
+    {
+      "id": "w1",
+      "spawn": [15, 18.7],
+      "minX": 8,
+      "maxX": 20,
+      "speed": 2.6,
+      "alertRange": 6.5,
+      "chaseMultiplier": 1.7
+    }
+  ],
+  "turrets": [
+    {
+      "id": "t1",
+      "rect": [38.4, 18.9, 1.4, 1.5],
+      "dirX": -1,
+      "intervalSeconds": 1.2,
+      "bulletSpeed": 10,
+      "range": 16,
+      "disabledWhen": "p2"
+    }
+  ]
+}

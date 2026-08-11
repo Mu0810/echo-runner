@@ -1,0 +1,63 @@
+{
+  "id": "5-4",
+  "name": "Two Lifts, One Beam",
+  "chapter": 5,
+  "takeSeconds": 30,
+  "maxEchoes": 3,
+  "parTakes": 4,
+  "spawn": [2, 18.45],
+  "exit": [36.5, 3.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Four takes, and the order cannot be changed, because everything you need is above you. Lift E1 (deck x=9..13) climbs from y=19.4 to y=13.2 at 1.6 u/s while plate p1 (x=4.5..6.7, on the floor) is held. The mid ledge at y=12.6 is 7.4 units above the floor, so E1 is the only way up. On that ledge, in order left to right: plate p2 (x=16..18.2) which opens the exit door d1, laser l1 at x=20 burning 1.4s and dark 1.6s, plate p3 (x=22.5..24.7) which powers lift E2 (deck x=28..32) climbing from y=12.0 to y=5.8 at 1.6 u/s. The exit ledge at y=6.0 is 6.6 units above the mid ledge, so E2 is the only way up again, and the exit at x=36.5 is sealed behind d1 with a bulkhead to the top of the world above it. TAKE 1: run right and STOP on p1; E1 rises behind you and parks at the top. End the take on the plate. TAKE 2: Echo A holds p1 from about t=0.3s. Run right to x=8.2 and hop onto E1's deck at about t=1.1s, while it has only risen 1.3 units — board later than about t=2.0s and the deck is past your jump. Ride up, arriving y=13.2 at t=4.18s, then jump right from x=12.2 over the 1.0 gap and 0.6 up onto the ledge. Walk right and STOP on p2 at about t=5.1s; never go past x=19.4, the beam is at x=20. End the take there. TAKE 3: Echoes A and B hold p1 and p2. Repeat the ride, land on the ledge at about t=4.55s, run to x=18.6 and WAIT — l1 is lit from t=5.0s to t=6.4s. Cross the moment it goes dark at t=6.4s; the 1.7 units past the beam take a quarter second and the dark window is 1.6s. Continue right and STOP on p3 at about t=6.9s. E2 rises empty. End the take there. TAKE 4: Echoes A, B and C hold all three plates and d1 is open. Ride E1, cross the beam at t=6.4s, then keep running right to x=25.2 (the ledge's right edge) and jump the 2.0 gap onto E2's deck at about t=7.2s — Echo C armed E2 at t=6.9s so the deck has only climbed 0.5 units and sits 1.2 above the ledge. You have roughly a second and a half before it is out of reach. Ride 6.2 units up, arriving y=5.8 at about t=10.7s, jump right from x=31.2 over the 1.0 gap onto the exit ledge (top y=6.0, a 0.2 drop), then through the open doorway at x=35 and into the exit at x=36.5, about t=11.5s. If you cross the beam early with a dash you will trip p3 yourself, E2 will start and then sink back when you step off, and you can simply wait aboard it until Echo C arrives.",
+  "dialogue": [
+    { "speaker": "", "text": "Two lifts. Two plates. And a light that keeps its own time." },
+    { "speaker": "ECHO-0", "text": "Three of us standing still so one of us can move." },
+    { "speaker": "", "text": "I stopped asking which one I am." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [14, 12.6, 12, 0.8], "kind": "SOLID" },
+    { "rect": [33, 6, 7, 0.8], "kind": "SOLID" },
+    { "rect": [34.5, 0, 4.5, 1.5], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4.5, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [16, 12.2, 2.2, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [22.5, 12.2, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [35, 1.5, 1.2, 4.5], "opensWhen": "p2", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "e1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[9, 19.4], [9, 13.2]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    },
+    {
+      "id": "e2",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[28, 12], [28, 5.8]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p3",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [20, 9.4, 0.3, 3.2],
+      "onSeconds": 1.4,
+      "offSeconds": 1.6,
+      "phase": 1.0,
+      "disabledWhen": null
+    }
+  ]
+}

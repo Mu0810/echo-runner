@@ -1,0 +1,51 @@
+{
+  "id": "7-2",
+  "name": "Quorum Of Five",
+  "chapter": 7,
+  "takeSeconds": 30,
+  "maxEchoes": 5,
+  "parTakes": 6,
+  "spawn": [2, 18.45],
+  "exit": [36.5, 9.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Six takes — five bodies standing still and one walking out. The first door needs THREE plates at once (p1 at x=4, p2 at x=8, p3 at x=12, each 2 wide and 4 apart so no single body spans two). Behind it, plate p4 at x=20 powers the lift, and up on the deck switch s1 opens the last door for 6 seconds. TAKES 1-3: stand on p1, then p2, then p3, one per take — each take you simply walk to the next plate and stop, because the earlier Echoes are already holding the ones behind you. At the end of take 3 all three are held and door d1 at x=16 is open, but you are pinned on p3. TAKE 4: walk through the open doorway and stand on p4 at x=20..22; that powers lift m1 at x=24..28. TAKE 5: Echo D holds p4 so the lift is climbing; board it at about t=2.6s while the deck is still near the floor, ride from y=19 to y=12, step across the 1-unit gap onto the deck at x=29..39, walk to s1 at x=31 and press it. That opens door d2 at x=34 for 6 seconds — not long enough to matter to you, because this take is for recording the press. TAKE 6: all five are held. Run right through d1, past p4, board the lift, ride up, and Echo E presses s1 at about t=7.5s as you reach the deck; walk right through d2 while it is up and into the exit at x=36.5.",
+  "dialogue": [
+    { "speaker": "", "text": "Five plates, five of you, one door at the top." },
+    { "speaker": "ECHO-0", "text": "The room was built for a crew of six. It still is. You are just all of them now." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [14.5, 0, 4.2, 14], "kind": "SOLID" },
+    { "rect": [29, 12, 10, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [8, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [12, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p4", "rect": [20, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [31, 10.6, 1.0, 1.4], "holdSeconds": 6, "startsOn": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [16, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p1", "p2", "p3"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    },
+    { "id": "d2", "rect": [34, 6, 1.2, 6], "opensWhen": "s1", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[24, 19], [24, 12]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p4",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ]
+}

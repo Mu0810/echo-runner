@@ -1,0 +1,27 @@
+{
+  "id": "1-1",
+  "name": "Cold Start",
+  "chapter": 1,
+  "takeSeconds": 30,
+  "maxEchoes": 0,
+  "parTakes": 1,
+  "spawn": [3, 18.45],
+  "exit": [36.6, 14.7, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "One take, no Echo — nothing here needs one. Run right along the floor (top y=20, you stand at y=18.45). Jump the first floor break at x=12..16.6 (4.6 units) without stopping at the lip, land on the middle slab, jump the second break at x=25.6..30.2 (also 4.6), then hop the 2.8-unit step onto the ledge whose left edge is x=34.5 (top y=17.2) and walk into the exit at x=36.6. Every jump is inside budget: 4.6 across vs 6.0 allowed, 2.8 up vs 3.4 allowed. Missing the ledge drops you back onto the floor that runs underneath it, so the step is safe to retry.",
+  "dialogue": [
+    { "speaker": "", "text": "Sector one. Life support is holding. Nothing else is." },
+    { "speaker": "ECHO-0", "text": "Get up. There are two breaks in the floor between you and the door." },
+    { "speaker": "", "text": "Don't slow down at the edges. The gap is shorter than the run-up." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 12, 2.5], "kind": "SOLID" },
+    { "rect": [16.6, 20, 9.0, 2.5], "kind": "SOLID" },
+    { "rect": [30.2, 20, 9.8, 2.5], "kind": "SOLID" },
+    { "rect": [34.5, 17.2, 5.5, 0.8], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [12, 21, 4.6, 1.5], "kind": "PIT" },
+    { "rect": [25.6, 21, 4.6, 1.5], "kind": "PIT" }
+  ]
+}

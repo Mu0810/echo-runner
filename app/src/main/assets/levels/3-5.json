@@ -1,0 +1,37 @@
+{
+  "id": "3-5",
+  "name": "Full Crew",
+  "chapter": 3,
+  "takeSeconds": 30,
+  "maxEchoes": 4,
+  "parTakes": 5,
+  "spawn": [2, 18.45],
+  "exit": [36.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Five takes — d1 at x=33 needs p1 AND p2 AND p3 AND p4 held together, and the four sit in a spiral no single 0.8-wide body can fold up: p1 on the floor at x=4.5..6.5, p2 on the lower grating at y=16.8 (x=10.5..12.5), p3 on the upper grating at y=13.6 (x=17.5..19.5), and p4 back down on the floor at x=17..19, directly under p3 and 6.4 units below it. Every take is short on purpose; none of them needs a precise jump, because both climbs are ONE_WAY gratings you pass up through from below. TAKE 1: walk 3.2 units right onto p1 and stand. Echo A holds it from about t=0.5s. TAKE 2: run right to x=11 (9 units, t=1.0s), stand under the grating at y=16.8 and jump STRAIGHT UP — a 3.2 rise — landing on top at about t=1.5s already inside p2. Stand; Echo B holds p2 from about t=1.5s. TAKE 3: repeat that climb (on the lower grating by t=1.5s), run right to its far end at x=13.5 and jump up-and-right: you clear y=13.6 while still rising and come down onto the upper grating at about x=17.7 at t=2.2s, which is inside p3 (x=17.5..19.5). A one-way platform has no edge to clip, so this jump is forgiving — miss it and you land back on the lower grating. Stand; Echo C holds p3 from about t=2.2s. TAKE 4: Echoes A, B and C hold the first three. Stay on the ground the whole way and run right 15 units to x=17.5, arriving about t=1.8s, and stand on p4 — it is directly beneath p3, so the two can never be covered by one body. All four plates are down during this take and d1 finishes opening at about t=2.2s, but the doorway is 15 units further right (1.7s of running) and d1 shuts 0.35s after p4 releases, so stepping off is always too slow. TAKE 5: Echo A holds p1 from 0.5s, Echo B holds p2 from 1.5s, Echo C holds p3 from 2.2s, Echo D holds p4 from 1.8s, so d1 starts opening at 2.2s and is fully clear by 2.55s. Run right from spawn along the open floor — the gratings are overhead and the Echoes do not block you — reach the doorway at x=33 at about t=3.4s, nearly a second after it cleared, and walk into the exit at x=36.5 at about t=3.8s. Nothing here can kill you and no take runs past 4 seconds; the level is long in takes, not in minutes. The door is 6 tall with a bulkhead sealing x=32.4..34.8 to the top of the world, so there is no route over it, and the floor is unbroken so there is no route under.",
+  "dialogue": [
+    { "speaker": "", "text": "Four plates. The manual called this a five-person seal." },
+    { "speaker": "ECHO-0", "text": "You are five people. Four of them are just very quiet about it." },
+    { "speaker": "", "text": "Stand. Rewind. Stand. Rewind. Then walk out through all of yourself." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [9, 16.8, 5, 0.4], "kind": "ONE_WAY" },
+    { "rect": [15.5, 13.6, 5.5, 0.4], "kind": "ONE_WAY" },
+    { "rect": [32.4, 0, 2.4, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [10.5, 16.4, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [17.5, 13.2, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p4", "rect": [17, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [33, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p1", "p2", "p3", "p4"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ]
+}

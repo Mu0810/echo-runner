@@ -1,0 +1,60 @@
+{
+  "id": "6-1",
+  "name": "The World Remembers",
+  "chapter": 6,
+  "takeSeconds": 30,
+  "maxEchoes": 4,
+  "parTakes": 5,
+  "spawn": [2, 18.45],
+  "exit": [36.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Five takes, four of them spent standing still. The exit sits behind door d1 at x=30, which needs p2 AND switch s1 at once, and the floor beyond it is swept by laser l1 at x=33 which only goes dark while p3 is held. p3 is on the high ledge, and the only way up is lift m1, which climbs solely while p1 is held on the floor. So: p1 buys the lift, the lift buys p3, p3 kills the laser, p2 and s1 buy the door. TAKE 1: stand on p1 (x=4..6). TAKE 2: Echo A holds p1, so the lift is climbing; jump aboard at about t=1.6s while its deck is still within reach of the floor, ride to y=12, step onto the ledge at x=24..29 and stand on p3 (x=25..27). TAKE 3: Echoes A and B hold the lift and the laser off; stand on p2 (x=9..11). TAKE 4: with three Echoes holding, walk to switch s1 at x=14..15 and press interact. It latches on for 6s and the door opens, but you are 16 units short of the doorway and this take is for recording the press, not for using it. End the take. TAKE 5: Echo D presses s1 at about t=1.4s and the door begins to open; you run straight from spawn, reach the doorway at about t=3.1s while it is still up and the 6s window still open, cross the dark laser lane, and walk into the exit at x=36.5.",
+  "dialogue": [
+    { "speaker": "", "text": "Four of you standing in the dark so one of you can leave." },
+    { "speaker": "ECHO-0", "text": "That was always the arrangement. You just could not see the others before." },
+    { "speaker": "", "text": "Go. They will keep holding. They do not know how to do anything else." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [24, 12, 5, 0.8], "kind": "SOLID" },
+    { "rect": [28.5, 0, 4.5, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [9, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [25, 11.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [14, 18.6, 1.0, 1.4], "holdSeconds": 6, "startsOn": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [30, 14, 1.2, 6],
+      "opensWhen": { "ids": ["p2", "s1"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[18, 19], [18, 12]],
+      "speed": 1.6,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ],
+  "lasers": [
+    {
+      "id": "l1",
+      "rect": [33, 14, 0.3, 6],
+      "onSeconds": 2.2,
+      "offSeconds": 0.6,
+      "phase": 0,
+      "disabledWhen": "p3"
+    }
+  ]
+}

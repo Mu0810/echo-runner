@@ -1,0 +1,34 @@
+{
+  "id": "1-4",
+  "name": "Detent",
+  "chapter": 1,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [3, 18.45],
+  "exit": [37.4, 15.9, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes, and the room is deliberately 1-2 twice over so the difference is visible: two plates, each with its own door far out of reach, but only the near one has a detent. p1 (x=6..8.2) is LATCHING — the first body to touch it drives it down and it stays down for the rest of the take, so nobody has to stand on it. p2 (x=27..29.2) is a plain plate and only holds while a body is on it. TAKE 1: run right from spawn at x=3 and simply walk over p1 at about t=0.33s. It latches; door dA at x=15.5 is now open permanently and finishes travelling by about t=0.68s. Under 1-2's rules this would be dead — p1 is 7.3 units (0.79s) from dA and a plain plate's door shuts 0.35s after release — but the detent means one body is enough, and this is the whole lesson. Keep running through the doorway at x=15.5 (you arrive about t=1.36s, roughly 0.7s after it opened), continue to the lip of the pit at x=20 and jump the 4.5-unit gap onto the raised deck whose left edge is x=24.5, top y=18.4: 4.5 across and 1.6 up, inside the 6.0/3.4 budget. Land about t=2.65s, run right onto p2 (x=27..29.2) at about t=2.9s and STAND. p2 opens door dB at x=35.5 while you hold it (fully open about t=3.25s), but dB is 6.3 units away — 0.68s of running against a 0.35s close — so you cannot cash this one in yourself. End the take standing on p2. TAKE 2: your Echo repeats that exact run: it taps p1 in passing at t=0.33s, so dA is already open and stays open even though the Echo is long gone from the plate, and it arrives on p2 at about t=2.9s and holds it from then on. Run the same line yourself — over p1 (your tap is redundant now), through dA, over the pit, straight across p2 without stopping — and reach dB at x=35.5 about t=3.5s, roughly 0.45s after it finishes opening. Through it and into the exit at x=37.4 by about t=3.9s. Both doors are 5.5 units tall with bulkheads sealing to y=0, so neither can be jumped, and the pit is 10 units of open air down to the death line at y=22.5. The pair is the point: the latching plate needs no body at all once it is struck, the plain one still costs you a whole timeline.",
+  "dialogue": [
+    { "speaker": "", "text": "This one has a detent. Step on it once and it stays down." },
+    { "speaker": "ECHO-0", "text": "So you do not have to stand there. Neither do I. Touch it and keep walking." },
+    { "speaker": "", "text": "The far plate has no detent. That one still costs a body." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 20, 2.5], "kind": "SOLID" },
+    { "rect": [24.5, 18.4, 15.5, 4.1], "kind": "SOLID" },
+    { "rect": [14, 0, 4.2, 14.5], "kind": "SOLID" },
+    { "rect": [34, 0, 4.2, 12.9], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [20, 21, 4.5, 1.5], "kind": "PIT" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [6, 19.6, 2.2, 0.4], "latching": true, "echoOnly": false },
+    { "id": "p2", "rect": [27, 18.0, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "dA", "rect": [15.5, 14.5, 1.2, 5.5], "opensWhen": "p1", "travelSeconds": 0.35 },
+    { "id": "dB", "rect": [35.5, 12.9, 1.2, 5.5], "opensWhen": "p2", "travelSeconds": 0.35 }
+  ]
+}

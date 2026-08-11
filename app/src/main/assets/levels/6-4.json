@@ -1,0 +1,55 @@
+{
+  "id": "6-4",
+  "name": "In This Order",
+  "chapter": 6,
+  "takeSeconds": 30,
+  "maxEchoes": 4,
+  "parTakes": 5,
+  "spawn": [2, 18.45],
+  "exit": [36, 4.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Five takes and the order is forced — each recording opens the ground the NEXT recording has to stand on, so you climb the building one floor per take. TAKE 1: stand on p1 (x=4..6). It powers lift m1 at x=10..14. TAKE 2: Echo A holds p1, so m1 climbs from y=19 to y=13. Board it at about t=1.2s while the deck is still level with the floor, ride up, step across the 1-unit gap onto the first gantry at x=15..21, walk to p2 at x=17 and stand. That unlocks door d2 at x=21. TAKE 3: with d2 open, ride m1 up again, cross the first gantry, pass through the doorway at x=21 and onto the catwalk at x=22..26, then stand on p3 at x=24. That powers the second lift m2 at x=27..31. TAKE 4: ride m1, cross, pass d2, walk the catwalk, board m2 at x=27 while its deck is level with the catwalk at y=13, ride it up to y=7, step across onto the top deck at x=32..38 and stand on p4 at x=34. That opens the last door d1 at x=35. TAKE 5: everything is held. Ride m1, cross the gantry, through d2, along the catwalk, board m2, ride to the top, walk right through the final doorway and into the exit at x=36. Roughly ten seconds of climbing with four earlier versions of you holding every stair in place. Do the takes in any other order and the floor you need will not be there.",
+  "dialogue": [
+    { "speaker": "", "text": "Four floors. Each one held open by whoever went before." },
+    { "speaker": "ECHO-0", "text": "There is no way to do this out of order. The building will not allow it." },
+    { "speaker": "", "text": "Then start at the bottom, like always." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [15, 13, 6, 0.8], "kind": "SOLID" },
+    { "rect": [22, 13, 4, 0.8], "kind": "SOLID" },
+    { "rect": [32, 7, 6, 0.8], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [17, 12.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p3", "rect": [24, 12.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p4", "rect": [34, 6.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d2", "rect": [21, 7, 1.2, 6], "opensWhen": "p2", "travelSeconds": 0.35 },
+    { "id": "d1", "rect": [35, 1, 1.2, 6], "opensWhen": "p4", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[10, 19], [10, 13]],
+      "speed": 1.7,
+      "mode": "SIGNAL",
+      "activeWhen": "p1",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    },
+    {
+      "id": "m2",
+      "size": { "w": 4, "h": 0.6 },
+      "path": [[27, 13], [27, 7]],
+      "speed": 1.7,
+      "mode": "SIGNAL",
+      "activeWhen": "p3",
+      "dwellSeconds": 0.2,
+      "startNode": 0
+    }
+  ]
+}

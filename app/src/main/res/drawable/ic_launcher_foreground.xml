@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Runner glyph + trailing echo, drawn in the game's cyan/magenta signature. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <path android:fillColor="#22D3EE" android:pathData="M62,34m-7,0a7,7 0,1 1,14 0a7,7 0,1 1,-14 0" />
+    <path android:fillColor="#22D3EE"
+        android:pathData="M60,44 L67,44 L72,60 L66,62 L62,52 L62,76 L55,76 L55,62 L48,76 L41,74 L50,56 Z" />
+    <path android:fillColor="#E879F9" android:fillAlpha="0.45" android:pathData="M44,34m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+    <path android:fillColor="#E879F9" android:fillAlpha="0.35"
+        android:pathData="M42,44 L48,44 L52,58 L47,60 L43,51 L43,74 L37,74 L37,61 L31,74 L25,72 L33,55 Z" />
+</vector>

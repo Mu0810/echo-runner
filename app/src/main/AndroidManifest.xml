@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Haptics only. The game is fully offline: no INTERNET permission is requested. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <supports-screens android:largeScreens="true" android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:hardwareAccelerated="true"
+        android:theme="@style/Theme.EchoRunner">
+
+        <activity
+            android:name=".GameActivity"
+            android:exported="true"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation|uiMode|density|smallestScreenSize"
+            android:resizeableActivity="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.EchoRunner">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

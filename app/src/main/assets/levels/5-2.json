@@ -1,0 +1,43 @@
+{
+  "id": "5-2",
+  "name": "It Comes Back On Its Own",
+  "chapter": 5,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [2, 18.45],
+  "exit": [36.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes. The pit runs from x=12 to x=27 — fifteen units, so no jump crosses it and the ferry is the only way over. The exit at x=36.5 sits behind door d1 (x=31, six units tall with the bulkhead above it running to the top of the world) and d1's only power is plate p1 at x=4..6.2, back on the LEFT bank: you cannot hold the door and be the passenger. The ferry m1 takes no signal at all. It ping-pongs between x=22.5 (right) and x=12.7 (left) at 3.2 u/s with a 0.4s dwell at each end — a 6.9-second round trip — and it starts the take parked at the RIGHT end, so its first move is toward you. TAKE 1: walk right from spawn onto p1 and stand there; end the take on the plate, and use the wait to count the ferry. TAKE 2: your Echo steps onto p1 at about t=0.3s and holds it for good, so d1 is fully open by about t=0.7s. Run right to x=11.9, where the deck's left face stops you — that is 9.9 units, about 1.3s — and wait. The ferry reaches the left end at t=3.06s and dwells until t=3.46s; hop the 0.7 units up onto the deck (deck top y=19.3, banks are y=20) during that dwell. It departs at t=3.46s and reaches the right end at t=6.52s, where its right edge lands exactly on the bank edge at x=27, so walk straight off it and drop 0.7 onto solid ground. Run the 4 units right through the open doorway at x=31 and on into the exit at x=36.5, about t=7.8s. Do NOT chase the ferry once it has left: from x=11.9 the longest running jump puts you near x=18.2 while the deck's left edge is already past x=19.8, and you drop into the pit. Miss the window and simply wait — it comes back every 6.9 seconds, forever.",
+  "dialogue": [
+    { "speaker": "", "text": "No plate on it. No switch. It just goes, and goes back." },
+    { "speaker": "ECHO-0", "text": "Then it owes you nothing. Learn its count and stand where it will be." },
+    { "speaker": "", "text": "Seven seconds. I counted them while I was busy being someone's door." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 12, 2.5], "kind": "SOLID" },
+    { "rect": [27, 20, 13, 2.5], "kind": "SOLID" },
+    { "rect": [30.5, 0, 4.5, 14], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [12, 21, 15, 1.5], "kind": "PIT" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [4, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [31, 14, 1.2, 6], "opensWhen": "p1", "travelSeconds": 0.35 }
+  ],
+  "movers": [
+    {
+      "id": "m1",
+      "size": { "w": 4.5, "h": 0.6 },
+      "path": [[12.7, 19.3], [22.5, 19.3]],
+      "speed": 3.2,
+      "mode": "LOOP",
+      "activeWhen": null,
+      "dwellSeconds": 0.4,
+      "startNode": 1
+    }
+  ]
+}

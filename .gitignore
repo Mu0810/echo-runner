@@ -1,0 +1,37 @@
+# Build output
+build/
+app/build/
+.gradle/
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Machine-specific: points at this machine's Android SDK, must not be shared
+local.properties
+
+# Build artifacts. The APK is 11 MB and regenerable with ./gradlew assembleDebug
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Signing material — never commit these
+*.jks
+*.keystore
+keystore.properties
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.kotlin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

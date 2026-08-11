@@ -1,0 +1,39 @@
+{
+  "id": "3-4",
+  "name": "Four Point Five Seconds",
+  "chapter": 3,
+  "takeSeconds": 30,
+  "maxEchoes": 3,
+  "parTakes": 4,
+  "spawn": [2, 12.05],
+  "exit": [34.5, 11.1, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Four takes. d1 at x=30 needs p1 AND p2 AND s1 all live at the same instant, and s1 is a timed switch: one press turns it on for 4.5 seconds, then it lapses. p1 sits on the upper deck (x=5..7, deck top y=13.6), p2 sits on the grating above it (x=10.5..12.5, top y=10.4), and s1 stands on the BASEMENT floor at x=29..30, 6.4 units below the deck. Nothing jumps 6.4 units, so the basement is a one-way trip — whoever presses s1 is down there for the rest of the take. That is why the switch and the plates can only overlap if three of you exist at once. TAKE 1: walk 3.5 units right from spawn onto p1 and stand; p1 is down from about t=0.5s. Echo A holds it. TAKE 2: run right to x=11 (9 units, t=1.0s), directly under the ONE_WAY grating at y=10.4, and jump STRAIGHT UP — a 3.2 rise, inside the 3.4 budget — passing through from below and landing on top at about t=1.5s, already inside p2 (x=10.5..12.5). Stand; Echo B holds p2 from about t=1.5s. Overshooting the grating drops you back on the deck, not into the pit. TAKE 3: Echoes A and B hold p1 and p2. Run right along the deck to its right edge at x=15 (13 units, t=1.45s) and walk off into the 4-unit gap — you fall 6.4 units, pass under the right deck and land on the basement floor at about x=19 at t=1.9s. Run 9 units right to x=28.2, beside s1, arriving about t=2.9s. Now WAIT, and tap interact ONCE at about t=5.0s. All three signals are live from 5.0s and d1 finishes opening at 5.35s — but you are on the basement floor with 6.4 units of dead air over your head and no route up, so you cannot cash it in. Bank the take. TAKE 4: Echo A holds p1 from 0.5s, Echo B holds p2 from 1.5s, Echo C drops into the basement and taps s1 at 5.0s, so d1 is fully open from 5.35s until s1 lapses at 9.5s. Run right from spawn, jump the 4-unit gap from the deck edge at x=15 (a running jump clears 6.3, so this is comfortable) and land on the right deck at about x=21 at t=2.1s, then continue to x=29 and STOP in front of the shut door at about t=3.0s. Wait about 2.3 seconds. When the door clears at 5.35s, run through the doorway at x=30 and into the exit at x=34.5, arriving about t=6.1s — four seconds before the window shuts. Do not tap s1 yourself on the last take: reaching it means entering the basement, and the basement has no way out. The door is 4.5 tall with a bulkhead sealing x=29.4..31.8 to the top of the world, so there is no arc over it.",
+  "dialogue": [
+    { "speaker": "", "text": "The switch is downstairs. There is no stair." },
+    { "speaker": "ECHO-0", "text": "Then one of us stays downstairs. It only has to reach out once, at the right second." },
+    { "speaker": "", "text": "Be standing at the door before it does. Four and a half seconds is all it buys you." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [0, 13.6, 15, 0.8], "kind": "SOLID" },
+    { "rect": [19, 13.6, 21, 0.8], "kind": "SOLID" },
+    { "rect": [9.5, 10.4, 4.5, 0.4], "kind": "ONE_WAY" },
+    { "rect": [29.4, 0, 2.4, 9.1], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [5, 13.2, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [10.5, 10.0, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [29, 18.6, 1.0, 1.4], "holdSeconds": 4.5, "startsOn": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [30, 9.1, 1.2, 4.5],
+      "opensWhen": { "ids": ["p1", "p2", "s1"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ]
+}

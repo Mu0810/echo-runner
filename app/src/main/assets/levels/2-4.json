@@ -1,0 +1,43 @@
+{
+  "id": "2-4",
+  "name": "Either Will Do",
+  "chapter": 2,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [14, 11.45],
+  "exit": [36.5, 7.3, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes. Read the doors before you plan: d1 (x=25, on the east deck) and d2 (x=33, on the top shelf) both open on ANY of s1, s2 — either switch on its own is enough, which is why this room only grants one Echo. Both switches sit on the basement floor (top y=20) 7 units below the decks (top y=13); a jump tops out at 3.67 and the basement has no ladder anywhere across its full width, so whoever throws a switch stays down there. TAKE 1 (west route, recommended): from spawn (x=14 on the west deck, x=4.5..17) walk LEFT 9.5 units to the deck edge at x=4.5 and step off — you fall 7 units in about 0.47s, land near x=4.0, walk 1.3 units left and interact with s1 at x=1.2..2.2 at about t=1.8s. s1 holds for 7 seconds. End the take down there; that body is spent. TAKE 2: sprint RIGHT the instant the take begins — 3.0 units to the deck edge at x=17 (0.33s), jump the 4.0-unit gap (inside the 6.0 budget) and land on the east deck at about x=21.8 at t≈0.83s, then walk to x=23.9 and wait against d1. Your Echo throws s1 at about t=1.8s and both doors finish sweeping open by t≈2.15s. Pass d1 (clear of it at x=26.4), run to x=28.2, and jump UP 3.2 onto the top shelf at y=9.8 — the shelf runs x=29..40 and is 3.2 thick, so its face walls the deck off from x=29 rightward and its left edge is the only place you can board it, which is what stops you skipping d2. Land at about x=29.5 at t≈3.2s, run right through d2 at x=33 and into the exit at x=36.5 by t≈3.9s. The whole post-open run is ~1.9s, so seven seconds is generous. s2 works exactly as well and is a shorter take 1 — walk 3.0 right and DROP into the middle gap at x=17..21 instead of jumping it, land in the basement and throw s2 at x=18.8..19.8 at about t=0.9s — but it only holds 4 seconds (window 0.9s..4.9s against a ~1.9s run, still fine) and its Echo drops through the same gap you have to clear on take 2, so take the west route on your first read of the room.",
+  "dialogue": [
+    { "speaker": "", "text": "Two throw-switches, one basement, no ladder out of it." },
+    { "speaker": "ECHO-0", "text": "Read the door before you plan. It wants either one. Not both." },
+    { "speaker": "", "text": "One body left in the dark is the price. You only have to pay it once." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [4.5, 13, 12.5, 2.0], "kind": "SOLID" },
+    { "rect": [21, 13, 19, 2.0], "kind": "SOLID" },
+    { "rect": [29, 9.8, 11, 3.2], "kind": "SOLID" },
+    { "rect": [23.7, 0, 3.8, 7], "kind": "SOLID" },
+    { "rect": [31.7, 0, 3.8, 3.8], "kind": "SOLID" }
+  ],
+  "switches": [
+    { "id": "s1", "rect": [1.2, 18.6, 1.0, 1.4], "holdSeconds": 7, "startsOn": false },
+    { "id": "s2", "rect": [18.8, 18.6, 1.0, 1.4], "holdSeconds": 4, "startsOn": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [25, 7, 1.2, 6],
+      "opensWhen": { "ids": ["s1", "s2"], "mode": "ANY", "invert": false },
+      "travelSeconds": 0.35
+    },
+    {
+      "id": "d2",
+      "rect": [33, 3.8, 1.2, 6],
+      "opensWhen": { "ids": ["s1", "s2"], "mode": "ANY", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ]
+}

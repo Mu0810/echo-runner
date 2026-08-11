@@ -1,0 +1,43 @@
+{
+  "id": "3-2",
+  "name": "Nobody Follows",
+  "chapter": 3,
+  "takeSeconds": 30,
+  "maxEchoes": 2,
+  "parTakes": 3,
+  "spawn": [3, 18.45],
+  "exit": [17.2, 7.9, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Three takes. The room is cut in half by an 11-unit chasm (floor ends x=18, resumes x=29) — a running jump clears about 6.3, so the teleporter tp1 is the ONLY crossing. Pad A sits on the left floor at x=15.4..16.6, pad B on the island at x=31.4..32.6; entering either pad emits you from the other, and ONLY the player travels — an Echo walking over a pad is not moved at all. So the island plate p2 can never be held by sending an Echo across: the only body that can get there is you, which means p2 costs you an entire timeline. TAKE 1: run right from spawn, pass under the grating, and touch pad A at about t=1.35s (11.5 units at 9.2 u/s); you emerge standing on pad B, drop 0.7 onto the island, run 2 units right onto p2 (x=34.5..36.5) and stand there. End the take with your feet on p2 — the trip is baked into the recording, so Echo A re-runs it every take and is holding p2 from about t=1.9s onward. Do not linger on pad B: it goes live again 0.6s after it fires, and you would be thrown back to pad A. TAKE 2: Echo A crosses and pins p2. You only need to walk 2.1 units right onto p1 (x=6..8) and stand; that holds from about t=0.5s. Both plates are down from t=1.9s in this take, but you are pinned on p1 and the doorway is 14 units away and 9.6 units up, and the door shuts 0.35s after p1 releases, so you cannot cash it in yourself. TAKE 3: Echo B holds p1 from t=0.5s, Echo A teleports and reaches p2 at t=1.9s, so d1 starts opening at 1.9s and is fully clear by 2.25s. Ignore the teleporter this time and climb the left tower: run right to about x=9.8 (0.8s), stop, jump straight UP through the one-way grating at y=16.8 (a 3.2 rise) and land on top of it at about t=1.6s. Run left off its left edge (x=9.5) and jump 1.0 across and 3.2 up onto the ledge at y=13.6 (x=4.5..8.5), landing about t=2.4s. Turn around and jump 2.0 across and 3.2 up onto the gallery at y=10.4 (x=10.5..19), landing about x=12 at t=3.2s. Run 3 units right through the open doorway at x=15 (t=3.55s, 1.3s after it finished opening) and into the exit at x=17.2. The door is 4.5 tall with a bulkhead above it sealing x=14.2..17.0 all the way to y=0, so there is no arc over it, and the gallery is 9.6 above the floor so the tower is the only way up.",
+  "dialogue": [
+    { "speaker": "", "text": "The pad reads one body, and one only. Yours." },
+    { "speaker": "ECHO-0", "text": "It will not carry them. Anything you need on the far side, you have to go and be — and spend a whole timeline standing there." },
+    { "speaker": "", "text": "Eleven units of nothing between here and the island. Do not try the jump." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 18, 2.5], "kind": "SOLID" },
+    { "rect": [29, 20, 11, 2.5], "kind": "SOLID" },
+    { "rect": [9.5, 16.8, 5.0, 0.4], "kind": "ONE_WAY" },
+    { "rect": [4.5, 13.6, 4.0, 0.6], "kind": "SOLID" },
+    { "rect": [10.5, 10.4, 8.5, 0.8], "kind": "SOLID" },
+    { "rect": [14.2, 0, 2.8, 5.9], "kind": "SOLID" }
+  ],
+  "hazards": [
+    { "rect": [18, 21, 11, 1.5], "kind": "PIT" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [6, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false },
+    { "id": "p2", "rect": [34.5, 19.6, 2.0, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    {
+      "id": "d1",
+      "rect": [15, 5.9, 1.2, 4.5],
+      "opensWhen": { "ids": ["p1", "p2"], "mode": "ALL", "invert": false },
+      "travelSeconds": 0.35
+    }
+  ],
+  "teleporters": [
+    { "id": "tp1", "a": [15.4, 17, 1.2, 3], "b": [31.4, 17, 1.2, 3], "cooldownSeconds": 0.6 }
+  ]
+}

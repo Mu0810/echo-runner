@@ -1,0 +1,27 @@
+{
+  "id": "1-2",
+  "name": "Hold The Line",
+  "chapter": 1,
+  "takeSeconds": 30,
+  "maxEchoes": 1,
+  "parTakes": 2,
+  "spawn": [3, 18.45],
+  "exit": [34.5, 17.5, 1.6, 2.5],
+  "exitCondition": null,
+  "hint": "Two takes. TAKE 1: walk right from spawn onto plate p1 (x=7..9.2) and just stand on it — the door at x=24 opens while you stand there, but it is 15 units away and shuts 0.35s after you step off, so you can never be in both places. End the take standing on the plate. TAKE 2: your Echo walks onto p1 at about t=0.8s and holds it (an Echo keeps pressing a plate even after its recording runs out). Run right from spawn — you reach the doorway at about t=2.4s, well after it is open — pass through and walk into the exit at x=34.5. The door is 6 units tall and the bulkhead above it runs to the top of the world, so there is no route over it.",
+  "dialogue": [
+    { "speaker": "", "text": "The plate reads weight. It does not care whose." },
+    { "speaker": "ECHO-0", "text": "Record a take standing on it. Then leave, and let the recording keep it down." },
+    { "speaker": "", "text": "You will watch yourself hold the door. Nobody gets used to that part." }
+  ],
+  "platforms": [
+    { "rect": [0, 20, 40, 2.5], "kind": "SOLID" },
+    { "rect": [22.5, 0, 4.5, 14], "kind": "SOLID" }
+  ],
+  "plates": [
+    { "id": "p1", "rect": [7, 19.6, 2.2, 0.4], "latching": false, "echoOnly": false }
+  ],
+  "doors": [
+    { "id": "d1", "rect": [24, 14, 1.2, 6], "opensWhen": "p1", "travelSeconds": 0.35 }
+  ]
+}
