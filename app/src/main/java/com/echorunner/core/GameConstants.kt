@@ -50,6 +50,18 @@ object GameConstants {
     /** Releasing jump early cuts upward velocity by this factor (variable jump height). */
     const val JUMP_CUT_FACTOR = 0.45f
 
+    /**
+     * The jump cut is suppressed for this long after take-off, guaranteeing a minimum jump.
+     *
+     * Without it, a quick tap rose **0.73 units** — `JUMP_VELOCITY * JUMP_CUT_FACTOR` squared over
+     * twice falling gravity — while every vertical route in the game is built on 3.2-unit climbs.
+     * A held jump reaches 5.62, so the mechanic worked, but on a touchscreen a quick tap is the
+     * natural gesture and nothing teaches otherwise, which made perfectly solvable rooms feel
+     * impossible. Holding the cut for 0.18s floors any jump at roughly 3.3 units — just past the
+     * tallest designed climb — while still leaving real variable height above that.
+     */
+    const val MIN_JUMP_SECONDS = 0.18f
+
     const val DASH_SPEED = 27f
     const val DASH_SECONDS = 0.16f
     const val DASH_COOLDOWN_SECONDS = 0.70f

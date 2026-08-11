@@ -145,9 +145,11 @@ fun GameScreen(
         when {
             paused -> PauseOverlay(
                 level = level,
+                canSkip = vm.canSkipCurrent(),
                 onResume = vm::togglePause,
                 onRestartTake = { vm.togglePause(); vm.restartTake() },
                 onRestartLevel = { vm.togglePause(); vm.restartLevel() },
+                onSkip = vm::skipCurrent,
                 onQuit = vm::openMenu,
             )
             phase == GamePhase.INTRO -> IntroOverlay(level, vm::dismissIntro)
@@ -456,9 +458,11 @@ private fun Banner(title: String, subtitle: String, tint: Color) {
 @Composable
 private fun PauseOverlay(
     level: LevelSpec?,
+    canSkip: Boolean,
     onResume: () -> Unit,
     onRestartTake: () -> Unit,
     onRestartLevel: () -> Unit,
+    onSkip: () -> Unit,
     onQuit: () -> Unit,
 ) {
     Box(
@@ -479,6 +483,9 @@ private fun PauseOverlay(
             MenuAction("RESUME", Ui.accent, onResume)
             MenuAction("RESTART TAKE", Ui.textDim, onRestartTake)
             MenuAction("RESTART ROOM", Ui.textDim, onRestartLevel)
+            // Appears only after the room has been tried several times. A puzzle that has beaten
+            // you should not also confiscate the rest of the game.
+            if (canSkip) MenuAction("SKIP THIS ROOM", Ui.echo, onSkip)
             MenuAction("LEAVE", Ui.warn, onQuit)
 
             // One-line nudge only. The level's `hint` field holds the full take-by-take
