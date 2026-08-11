@@ -195,7 +195,7 @@ fun StoryScreen(vm: GameViewModel) {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         chapter.levelIds.forEach { id ->
                             val done = vm.isCompleted(id)
-                            val unlocked = isUnlocked(vm, id)
+                            val unlocked = vm.isUnlocked(id)
                             TextButtonChip(
                                 label = id,
                                 tint = when {
@@ -216,14 +216,6 @@ fun StoryScreen(vm: GameViewModel) {
             }
         }
     }
-}
-
-/** First level is always open; every later one needs its predecessor cleared. */
-private fun isUnlocked(vm: GameViewModel, levelId: String): Boolean {
-    val ids = vm.levels.levelIds()
-    val i = ids.indexOf(levelId)
-    if (i <= 0) return true
-    return vm.isCompleted(ids[i - 1])
 }
 
 @Composable

@@ -355,6 +355,7 @@ class ProgressStore(context: Context) : ProgressRepository {
             obj.put("bestSeconds", finite(record.bestSeconds, 0f).toDouble())
             obj.put("deaths", record.deaths)
             obj.put("bestStars", record.bestStars)
+            obj.put("attempts", record.attempts)
             levels.put(id, obj)
         }
         root.put("levels", levels)
@@ -415,6 +416,7 @@ class ProgressStore(context: Context) : ProgressRepository {
                         .coerceAtLeast(0f),
                     deaths = obj.optInt("deaths", 0).coerceAtLeast(0),
                     bestStars = obj.optInt("bestStars", 0).coerceIn(0, Rating.MAX_STARS),
+                    attempts = obj.optInt("attempts", 0).coerceAtLeast(0),
                 )
             }
         }
@@ -503,6 +505,7 @@ class ProgressStore(context: Context) : ProgressRepository {
          *   accumulates naturally, and a transform that returns a freshly built record cannot
          *   erase the count.
          * - `bestStars` takes the maximum: a worse replay cannot demote an earned rating.
+         * - `attempts` is monotonic like `deaths`; it only ever grows.
          */
         fun bestOf(existing: LevelRecord, candidate: LevelRecord): LevelRecord = LevelRecord(
             levelId = existing.levelId.ifEmpty { candidate.levelId },
@@ -511,6 +514,7 @@ class ProgressStore(context: Context) : ProgressRepository {
             bestSeconds = betterTime(existing.bestSeconds, candidate.bestSeconds),
             deaths = maxOf(existing.deaths, candidate.deaths),
             bestStars = maxOf(existing.bestStars, candidate.bestStars),
+            attempts = maxOf(existing.attempts, candidate.attempts),
         )
 
         /** Smaller positive wins; 0 (and anything negative) means "no record". */

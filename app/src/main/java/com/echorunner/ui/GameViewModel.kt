@@ -99,6 +99,45 @@ class GameViewModel(app: Application) : ViewModel() {
 
     fun bestStars(levelId: String): Int = store.load().record(levelId).bestStars
 
+    fun attempts(levelId: String): Int = store.load().record(levelId).attempts
+
+    /**
+     * Whether [levelId] can be opened.
+     *
+     * Completing the previous level unlocks this one, and so does having *tried* it
+     * [ATTEMPTS_TO_UNLOCK] times. Strictly linear gating meant one unsolvable room hid every room
+     * behind it — the player saw a wall of locked chips and no way forward, which is a far worse
+     * failure than letting someone move past a puzzle that beat them.
+     */
+    fun isUnlocked(levelId: String): Boolean {
+        val ids = levels.levelIds()
+        val i = ids.indexOf(levelId)
+        if (i <= 0) return true
+        val prev = store.load().record(ids[i - 1])
+        return prev.completed || prev.attempts >= ATTEMPTS_TO_UNLOCK
+    }
+
+    /** True once the current room has been tried enough that offering a way past it is fair. */
+    fun canSkipCurrent(): Boolean {
+        val id = currentLevel?.id ?: return false
+        if (mode != GameMode.STORY) return false
+        return store.load().record(id).attempts >= ATTEMPTS_TO_UNLOCK &&
+            levels.nextLevelId(id) != null
+    }
+
+    /**
+     * Moves past the current room without marking it solved, so its chip stays unstarred and the
+     * player can come back. Only offered once [canSkipCurrent] holds.
+     */
+    fun skipCurrent() {
+        val id = currentLevel?.id ?: return
+        val next = levels.nextLevelId(id) ?: return openMenu()
+        audio.play(SoundCue.UI_BACK)
+        engine.setPaused(false)
+        input.clear()
+        startStory(next)
+    }
+
     /** Stars earned across Story mode, and the ceiling. Drives the main-menu progress line. */
     fun starTotals(): Pair<Int, Int> {
         val progress = store.load()
@@ -134,6 +173,10 @@ class GameViewModel(app: Application) : ViewModel() {
         val spec = levels.load(levelId)
         currentLevel = spec
         lastStars = 0
+        // Counted before play, not after: the escape hatch has to work for someone who opens a
+        // room, sees no way through it, and backs out without dying or running the clock down.
+        store.updateLevel(levelId) { it.copy(attempts = it.attempts + 1) }
+        bumpProgress()
         engine.load(spec, ChallengeModifier.NONE)
         _screen.value = Screen.Play(GameMode.STORY, levelId)
     }
@@ -286,6 +329,9 @@ class GameViewModel(app: Application) : ViewModel() {
     }
 
     companion object {
+        /** Attempts after which the next room unlocks even without a clear. */
+        const val ATTEMPTS_TO_UNLOCK = 3
+
         fun factory(app: Application): ViewModelProvider.Factory =
             object : ViewModelProvider.Factory {
                 @Suppress("UNCHECKED_CAST")

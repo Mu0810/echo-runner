@@ -16,6 +16,7 @@ import com.echorunner.core.GameConstants.GROUND_ACCEL
 import com.echorunner.core.GameConstants.GROUND_FRICTION
 import com.echorunner.core.GameConstants.JUMP_BUFFER_SECONDS
 import com.echorunner.core.GameConstants.JUMP_CUT_FACTOR
+import com.echorunner.core.GameConstants.MIN_JUMP_SECONDS
 import com.echorunner.core.GameConstants.JUMP_VELOCITY
 import com.echorunner.core.GameConstants.MOVE_SPEED
 import com.echorunner.core.GameConstants.TERMINAL_VY
@@ -96,6 +97,9 @@ object PlayerController {
         // Derived here and nowhere else, so a single tap can never be consumed by two systems.
         val jumpPressed = input.jumpHeld && !prevInput.jumpHeld
         val jumpReleased = !input.jumpHeld && prevInput.jumpHeld
+
+        // Airborne clock, used only to floor the jump height (see MIN_JUMP_SECONDS).
+        if (p.onGround) p.airborneFor = 0f else p.airborneFor += dt
         val dashPressed = input.dashHeld && !prevInput.dashHeld
 
         p.jumpHeld = input.jumpHeld
@@ -179,8 +183,10 @@ object PlayerController {
                     p.startedJump = true
                     audio.play(SoundCue.JUMP)
                     emitJump(world, p)
-                } else if (jumpReleased && p.vy < 0f) {
-                    // Variable height: letting go mid-rise trades altitude for control.
+                } else if (jumpReleased && p.vy < 0f && p.airborneFor >= MIN_JUMP_SECONDS) {
+                    // Variable height: letting go mid-rise trades altitude for control -- but only
+                    // after MIN_JUMP_SECONDS, so a tap still clears the climbs the levels are built
+                    // from. See the constant for the numbers.
                     p.vy *= JUMP_CUT_FACTOR
                 }
             }

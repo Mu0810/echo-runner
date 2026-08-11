@@ -42,6 +42,8 @@ class PlayerBody {
     var coyoteTimer = 0f
     var jumpBuffer = 0f
     var jumpHeld = false
+    /** Seconds since this jump left the ground; gates the minimum-jump window. */
+    var airborneFor = 0f
 
     /** Set for the single tick an action begins, so cues and particles fire once. */
     var startedJump = false
@@ -62,7 +64,7 @@ class PlayerBody {
         vx = 0f; vy = 0f
         onGround = false; facingRight = true; alive = true
         dashTimer = 0f; dashCooldown = 0f; dashesUsed = 0
-        coyoteTimer = 0f; jumpBuffer = 0f; jumpHeld = false
+        coyoteTimer = 0f; jumpBuffer = 0f; jumpHeld = false; airborneFor = 0f
         startedJump = false; startedDash = false; interacting = false
         anim = AnimState.IDLE
         carrierId = null

@@ -116,6 +116,12 @@ data class LevelRecord(
     val bestSeconds: Float = 0f,
     val deaths: Int = 0,
     val bestStars: Int = 0,
+    /**
+     * Times this level has been started. Drives the progression escape hatch: a room nobody
+     * can solve must not permanently hide the other 29, so repeated attempts unlock the next
+     * level even without a clear.
+     */
+    val attempts: Int = 0,
 )
 
 data class EndlessRecord(
