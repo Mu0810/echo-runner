@@ -13,6 +13,14 @@ yourself.
 what the player did during take one — walks the same path on its own, trailing particles. The
 filled pip under ECHOES is the recorded timeline; MEMORY counts down the current take.*
 
+![Three Echoes replaying at once on level 3-1](docs/echo-multi.gif)
+
+*Level 3-1, take four. Three Echoes replay simultaneously, each one a separate 30-second
+performance banked earlier and each rendered in its own hue so the timelines stay
+distinguishable. The door at the far right needs all three pressure plates held at the same
+instant, and a single body can only ever cover one — so the room is solved by the versions of
+you that are still standing there.*
+
 ## Build
 
 ```bash
