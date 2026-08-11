@@ -1,0 +1,138 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to the same branch makes the in-flight run pointless.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Unit tests + debug build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # JDK 21 specifically: AGP rejects the JDK 25 that some runners default to, which is the
+      # same trap gradle.properties pins around locally.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      # gradle.properties pins org.gradle.java.home to a local Homebrew path that does not
+      # exist on a runner. Strip that one line rather than committing a CI-specific copy of the
+      # file, so the two cannot drift apart.
+      - name: Neutralise the local JDK pin
+        run: sed -i '/^org\.gradle\.java\.home=/d' gradle.properties
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon --stacktrace
+
+      # Compiles the whole app including the UI layer, which the unit tests do not cover.
+      # Release is deliberately NOT built here: signing reads keystore.properties, which is
+      # correctly absent from the repo, and the build script degrades to unsigned rather than
+      # failing — so a green release build in CI would prove less than it appears to.
+      - name: Debug APK
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            app/build/reports/tests/
+            app/build/test-results/
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Upload debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+
+  levels:
+    name: Level data validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Runs independently of the JVM job: a malformed level is a content error, and knowing that
+    # within seconds is more useful than waiting on a Gradle build to report it.
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate every level's structure
+        run: |
+          python3 - <<'PY'
+          import json, sys, pathlib
+          d = pathlib.Path("app/src/main/assets/levels")
+          man = json.loads((d / "manifest.json").read_text())
+          ids = [l for c in man["chapters"] for l in c["levels"]]
+          rect = lambda v: tuple(v) if isinstance(v, list) else (v["x"], v["y"], v["w"], v["h"])
+          pt = lambda v: tuple(v) if isinstance(v, list) else (v["x"], v["y"])
+          def sig(v):
+              if v is None: return []
+              if isinstance(v, str): return [v]
+              if isinstance(v, dict): return v.get("ids", []) or ([v["id"]] if "id" in v else [])
+              return []
+          bad = 0
+          for lid in ids:
+              f = d / f"{lid}.json"
+              if not f.exists():
+                  print(f"::error::{lid}.json listed in manifest but missing"); bad += 1; continue
+              o = json.loads(f.read_text())
+              errs = []
+              if o["id"] != lid: errs.append(f"id mismatch: {o['id']}")
+              prod = {p["id"] for p in o.get("plates", [])} | {s["id"] for s in o.get("switches", [])}
+              refs = []
+              for x in o.get("doors", []): refs += sig(x.get("opensWhen"))
+              for x in o.get("movers", []): refs += sig(x.get("activeWhen"))
+              for x in o.get("lasers", []): refs += sig(x.get("disabledWhen"))
+              for x in o.get("turrets", []): refs += sig(x.get("disabledWhen"))
+              refs += sig(o.get("exitCondition"))
+              dangling = sorted({r for r in refs if r not in prod})
+              if dangling: errs.append(f"signals referenced but never produced: {dangling}")
+              sx, sy = pt(o["spawn"])
+              feet = sy + 1.55
+              if not any(abs(r[1] - feet) < 0.75 and r[0] - 0.5 <= sx <= r[0] + r[2]
+                         for r in (rect(p["rect"]) for p in o.get("platforms", [])
+                                   if p.get("kind", "SOLID") != "ONE_WAY")):
+                  errs.append(f"spawn is not standing on anything (feet y={feet:.2f})")
+              if o["maxEchoes"] > 5: errs.append("maxEchoes exceeds the engine cap of 5")
+              if o.get("parTakes", 1) > o["maxEchoes"] + 1:
+                  errs.append("par exceeds the take budget, so three stars is unreachable")
+              if len(o.get("hint", "")) < 40: errs.append("no solution recorded in hint")
+              for e in errs:
+                  print(f"::error file=app/src/main/assets/levels/{lid}.json::{e}"); bad += 1
+          print(f"{len(ids) - bad} of {len(ids)} level checks clean" if bad else
+                f"all {len(ids)} levels valid")
+          sys.exit(1 if bad else 0)
+          PY
