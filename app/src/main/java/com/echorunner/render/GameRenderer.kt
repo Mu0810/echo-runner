@@ -198,6 +198,7 @@ class GameRenderer {
 
     private fun wx(worldX: Float): Float = originX + worldX * scale
     private fun wy(worldY: Float): Float = originY + worldY * scale
+
     private fun wu(units: Float): Float = units * scale
 
     // ---- Cache ------------------------------------------------------------------------

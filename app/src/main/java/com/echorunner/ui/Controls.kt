@@ -2,14 +2,11 @@ package com.echorunner.ui
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +45,15 @@ import kotlin.math.hypot
  * Hit areas are deliberately larger than what is drawn: the visible ring is a target hint, and
  * a thumb that lands 10 dp outside it still counts. Missing a jump because of a few pixels is
  * the single worst thing a touch platformer can do.
+ *
+ * ## Why the actions form an arc rather than a row
+ *
+ * The world is 16:9 and the renderer fits it to screen *height*, so on a taller phone
+ * (19.5:9, 20:9) there is an unused letterbox column down each side. A horizontal row of three
+ * buttons is ~250 dp wide and spills far past that column into the middle of the play field —
+ * on level 1-1 the jump button sat directly over the exit portal. Arranging them as an arc
+ * hugging the corner cuts the horizontal spread by about a third and keeps the mass in the
+ * screen corner, which is the least play-critical region of a side-scrolling level.
  */
 @Composable
 fun TouchControls(
@@ -60,15 +66,17 @@ fun TouchControls(
         val stick: @Composable () -> Unit = {
             Joystick(
                 input = input,
-                diameter = 168.dp * scale,
-                modifier = Modifier.padding(start = 26.dp, end = 26.dp, bottom = 22.dp),
+                diameter = 150.dp * scale,
+                // Sit as close to the screen edge as comfort allows, so as much of the control
+                // as possible lives in the letterbox column rather than over the level.
+                modifier = Modifier.padding(start = 14.dp, end = 14.dp, bottom = 18.dp),
             )
         }
         val actions: @Composable () -> Unit = {
             ActionCluster(
                 input = input,
                 scale = scale,
-                modifier = Modifier.padding(start = 26.dp, end = 26.dp, bottom = 22.dp),
+                modifier = Modifier.padding(start = 14.dp, end = 14.dp, bottom = 18.dp),
             )
         }
 
@@ -162,41 +170,64 @@ private fun Joystick(
     }
 }
 
+/**
+ * The three action buttons, arranged as an arc tucked into the screen corner.
+ *
+ * Sizes are deliberately unequal: JUMP is the most-used and least-forgiving input, so it gets
+ * the largest target and the corner position a thumb rests on naturally. DASH sits inboard of
+ * it, and USE — pressed while standing still, never mid-platforming — is smallest and highest.
+ */
 @Composable
 private fun ActionCluster(
     input: InputBuffer,
     scale: Float,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier,
-        verticalAlignment = Alignment.Bottom,
-        horizontalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
+    val jump = 96.dp * scale
+    val dash = 74.dp * scale
+    val use = 62.dp * scale
+    val gap = 9.dp * scale
+    val inset = 11.dp * scale
+
+    // Geometry is written as explicit non-overlapping offsets rather than proportions, because
+    // proportional guesses produced overlapping hit areas — two buttons sharing pixels means a
+    // thumb aimed at DASH sometimes fires JUMP, which is worse than any layout compromise.
+    // JUMP owns the corner; DASH sits directly above it; USE tucks inboard of DASH. That keeps
+    // the horizontal spread to roughly one and a half buttons instead of three in a row.
+    val clusterW = dash + inset + gap + use
+    val clusterH = jump + gap + dash
+
+    Box(modifier.size(width = clusterW, height = clusterH)) {
         HoldButton(
             label = "USE",
-            diameter = 66.dp * scale,
+            diameter = use,
             tint = Ui.ok,
             description = "Interact",
             onPress = input::pressInteract,
             onRelease = input::releaseInteract,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = -(dash + inset + gap), y = -(jump + gap - 4.dp * scale)),
         )
         HoldButton(
             label = "DASH",
-            diameter = 78.dp * scale,
+            diameter = dash,
             tint = Ui.echo,
             description = "Dash",
             onPress = input::pressDash,
             onRelease = input::releaseDash,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = -inset, y = -(jump + gap)),
         )
-        Spacer(Modifier.width(2.dp))
         HoldButton(
             label = "JUMP",
-            diameter = 96.dp * scale,
+            diameter = jump,
             tint = Ui.accent,
             description = "Jump",
             onPress = input::pressJump,
             onRelease = input::releaseJump,
+            modifier = Modifier.align(Alignment.BottomEnd),
         )
     }
 }
@@ -215,12 +246,13 @@ private fun HoldButton(
     description: String,
     onPress: () -> Unit,
     onRelease: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var pressed by remember { mutableStateOf(false) }
     val measurer = rememberTextMeasurer()
 
     Box(
-        Modifier
+        modifier
             .size(diameter)
             .semantics { contentDescription = description }
             .pointerInput(Unit) {
@@ -245,20 +277,22 @@ private fun HoldButton(
         Canvas(Modifier.fillMaxSize()) {
             val c = Offset(size.width * 0.5f, size.height * 0.5f)
             val r = size.minDimension * 0.5f
-            drawCircle(color = Ui.void.copy(alpha = 0.5f), radius = r, center = c)
+            // Idle alpha is kept low on purpose: these sit over playable ground, so they must
+            // read as an overlay a thumb can find, not as scenery competing with the level.
+            drawCircle(color = Ui.void.copy(alpha = if (pressed) 0.55f else 0.34f), radius = r, center = c)
             drawCircle(
-                color = tint.copy(alpha = if (pressed) 0.26f else 0.09f),
+                color = tint.copy(alpha = if (pressed) 0.26f else 0.06f),
                 radius = r * 0.94f, center = c,
             )
             drawCircle(
-                color = tint.copy(alpha = if (pressed) 1f else 0.62f),
+                color = tint.copy(alpha = if (pressed) 1f else 0.44f),
                 radius = r * 0.94f, center = c,
-                style = Stroke(width = if (pressed) 2.4f else 1.6f),
+                style = Stroke(width = if (pressed) 2.4f else 1.5f),
             )
             val layout = measurer.measure(
                 text = label,
                 style = TextStyle(
-                    color = tint.copy(alpha = if (pressed) 1f else 0.8f),
+                    color = tint.copy(alpha = if (pressed) 1f else 0.62f),
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = (r * 0.30f).coerceIn(9f, 15f).sp,

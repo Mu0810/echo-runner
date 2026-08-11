@@ -11,6 +11,7 @@ import com.echorunner.core.GamePhase
 import com.echorunner.core.GameSettings
 import com.echorunner.core.InputBuffer
 import com.echorunner.core.LevelSpec
+import com.echorunner.core.Rating
 import com.echorunner.core.SoundCue
 import com.echorunner.engine.GameEngine
 import com.echorunner.level.Chapter
@@ -68,6 +69,14 @@ class GameViewModel(app: Application) : ViewModel() {
     /** Non-null while a level is loaded; drives HUD labels. */
     var currentLevel: LevelSpec? = null
         private set
+
+    /**
+     * Stars earned by the run that just finished, for the completion banner. Held here rather
+     * than read back from the store because the store keeps the BEST result, and the banner has
+     * to show what this attempt actually scored — including when that is worse than a past run.
+     */
+    var lastStars: Int = 0
+        private set
     private var currentChallenge: ChallengeModifier = ChallengeModifier.NONE
     private var mode: GameMode = GameMode.STORY
 
@@ -87,6 +96,16 @@ class GameViewModel(app: Application) : ViewModel() {
     fun isCompleted(levelId: String): Boolean = store.load().isCompleted(levelId)
 
     fun bestTakes(levelId: String): Int = store.load().record(levelId).bestTakes
+
+    fun bestStars(levelId: String): Int = store.load().record(levelId).bestStars
+
+    /** Stars earned across Story mode, and the ceiling. Drives the main-menu progress line. */
+    fun starTotals(): Pair<Int, Int> {
+        val progress = store.load()
+        val ids = levels.levelIds()
+        val earned = ids.sumOf { progress.record(it).bestStars }
+        return earned to ids.size * Rating.MAX_STARS
+    }
 
     fun challengeDone(id: String): Boolean = id in store.load().challengesCompleted
 
@@ -114,6 +133,7 @@ class GameViewModel(app: Application) : ViewModel() {
         currentChallenge = ChallengeModifier.NONE
         val spec = levels.load(levelId)
         currentLevel = spec
+        lastStars = 0
         engine.load(spec, ChallengeModifier.NONE)
         _screen.value = Screen.Play(GameMode.STORY, levelId)
     }
@@ -176,12 +196,17 @@ class GameViewModel(app: Application) : ViewModel() {
 
         when (mode) {
             GameMode.STORY -> {
+                // Rated from THIS run's takes and deaths, not the stored totals: `deaths` in the
+                // record is a lifetime counter, so it cannot say whether the best run was clean.
+                val stars = Rating.starsFor(takes, spec.parTakes, deaths)
+                lastStars = stars
                 store.updateLevel(spec.id) { existing ->
                     existing.copy(
                         completed = true,
                         bestTakes = takes,
                         bestSeconds = seconds,
                         deaths = existing.deaths + deaths,
+                        bestStars = stars,
                     )
                 }
                 bumpProgress()

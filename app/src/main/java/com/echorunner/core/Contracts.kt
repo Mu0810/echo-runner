@@ -102,13 +102,20 @@ data class ChallengeSpec(
 
 // ---- Persistence ---------------------------------------------------------------------
 
-/** Per-level record. [bestTakes] is the primary score: fewer Echoes is a better solve. */
+/**
+ * Per-level record. [bestTakes] is the primary score: fewer Echoes is a better solve.
+ *
+ * [bestStars] is stored rather than derived because [deaths] is a running total across every
+ * attempt, so it cannot tell you whether the *best* run was clean. The rating is computed once,
+ * at the moment of completion, from that run's own takes and deaths.
+ */
 data class LevelRecord(
     val levelId: String,
     val completed: Boolean = false,
     val bestTakes: Int = 0,
     val bestSeconds: Float = 0f,
     val deaths: Int = 0,
+    val bestStars: Int = 0,
 )
 
 data class EndlessRecord(

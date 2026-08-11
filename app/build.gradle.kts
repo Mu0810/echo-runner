@@ -1,8 +1,22 @@
+// `java` resolves to Gradle's JavaPluginExtension inside a Kotlin DSL script, shadowing the
+// package name, so java.util.Properties must be imported explicitly rather than used inline.
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+
+// Release signing is read from keystore.properties, which is deliberately NOT in git (it holds
+// the store password). A clone without that file still builds every other variant; only the
+// signed release is unavailable, and it fails loudly at assembleRelease rather than silently
+// producing an unsigned APK that looks installable and is not.
+val keystorePropsFile = rootProject.file("keystore.properties")
+val keystoreProps = Properties().apply {
+    if (keystorePropsFile.exists()) keystorePropsFile.inputStream().use { load(it) }
+}
+val hasSigning = keystoreProps.getProperty("storeFile") != null
 
 android {
     namespace = "com.echorunner"
@@ -19,6 +33,21 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasSigning) {
+            create("release") {
+                storeFile = rootProject.file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+                // v1 is only needed below API 24; minSdk is 26, so ship v2/v3 only.
+                enableV1Signing = false
+                enableV2Signing = true
+                enableV3Signing = true
+            }
+        }
+    }
+
     buildTypes {
         debug {
             isMinifyEnabled = false
@@ -31,6 +60,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            if (hasSigning) signingConfig = signingConfigs.getByName("release")
         }
     }
 

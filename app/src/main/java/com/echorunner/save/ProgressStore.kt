@@ -7,6 +7,7 @@ import com.echorunner.core.GameProgress
 import com.echorunner.core.GameSettings
 import com.echorunner.core.LevelRecord
 import com.echorunner.core.ProgressRepository
+import com.echorunner.core.Rating
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -353,6 +354,7 @@ class ProgressStore(context: Context) : ProgressRepository {
             obj.put("bestTakes", record.bestTakes)
             obj.put("bestSeconds", finite(record.bestSeconds, 0f).toDouble())
             obj.put("deaths", record.deaths)
+            obj.put("bestStars", record.bestStars)
             levels.put(id, obj)
         }
         root.put("levels", levels)
@@ -412,6 +414,7 @@ class ProgressStore(context: Context) : ProgressRepository {
                     bestSeconds = finite(obj.optDouble("bestSeconds", 0.0).toFloat(), 0f)
                         .coerceAtLeast(0f),
                     deaths = obj.optInt("deaths", 0).coerceAtLeast(0),
+                    bestStars = obj.optInt("bestStars", 0).coerceIn(0, Rating.MAX_STARS),
                 )
             }
         }
@@ -499,6 +502,7 @@ class ProgressStore(context: Context) : ProgressRepository {
          *   [updateLevel] receives the live record, `it.copy(deaths = it.deaths + 1)`
          *   accumulates naturally, and a transform that returns a freshly built record cannot
          *   erase the count.
+         * - `bestStars` takes the maximum: a worse replay cannot demote an earned rating.
          */
         fun bestOf(existing: LevelRecord, candidate: LevelRecord): LevelRecord = LevelRecord(
             levelId = existing.levelId.ifEmpty { candidate.levelId },
@@ -506,6 +510,7 @@ class ProgressStore(context: Context) : ProgressRepository {
             bestTakes = betterCount(existing.bestTakes, candidate.bestTakes),
             bestSeconds = betterTime(existing.bestSeconds, candidate.bestSeconds),
             deaths = maxOf(existing.deaths, candidate.deaths),
+            bestStars = maxOf(existing.bestStars, candidate.bestStars),
         )
 
         /** Smaller positive wins; 0 (and anything negative) means "no record". */
