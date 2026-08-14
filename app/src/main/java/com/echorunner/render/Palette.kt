@@ -99,6 +99,42 @@ object Palette {
     }
 
     /**
+     * Colour-blind-safe hue for the Echo at [index], from the Okabe-Ito qualitative palette.
+     *
+     * Ordered by **ascending luminance**, so "a later Echo is a brighter Echo" becomes a rule the
+     * player can learn and use even when the hues are indistinguishable to them.
+     *
+     * The five were chosen by measuring, not by eye. Okabe-Ito offers seven; a first attempt took
+     * sky blue and bluish green alongside orange and vermilion, and the palette test rejected it —
+     * two of those sit 0.035 apart in relative luminance, close enough to collapse into the same
+     * grey once hue is gone. This subset has a 0.069 minimum gap across a 0.59 span. Sky blue was
+     * also the closest of the seven to the player's own cyan, so dropping it separates "you" from
+     * "your Echoes" as well.
+     */
+    fun echoSafe(index: Int): Color = when (((index % echoHueCount) + echoHueCount) % echoHueCount) {
+        0 -> Color(0xFF0072B2) // blue        L 0.152
+        1 -> Color(0xFFD55E00) // vermilion   L 0.222
+        2 -> Color(0xFFCC79A7) // reddish purple  L 0.293
+        3 -> Color(0xFFE69F00) // orange      L 0.416
+        else -> Color(0xFFF0E442) // yellow   L 0.744
+    }
+
+    /**
+     * Outline dash pattern per timeline, in world units: solid, long dash, dot, dash-dot, fine.
+     *
+     * The cue of last resort. A pattern is not a colour, so it survives any form of colour
+     * vision deficiency and a greyscale screenshot alike.
+     */
+    fun echoDashPattern(index: Int): FloatArray? =
+        when (((index % echoHueCount) + echoHueCount) % echoHueCount) {
+            0 -> null                       // solid
+            1 -> floatArrayOf(0.34f, 0.20f)
+            2 -> floatArrayOf(0.10f, 0.16f)
+            3 -> floatArrayOf(0.34f, 0.14f, 0.10f, 0.14f)
+            else -> floatArrayOf(0.06f, 0.10f)
+        }
+
+    /**
      * Particle colour for a pool tint index. Emitters pick an index rather than a colour so
      * the simulation stays free of rendering types; `when` avoids the boxing an
      * `Array<Color>` lookup would introduce in the particle loop.

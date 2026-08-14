@@ -22,6 +22,7 @@ import com.echorunner.save.ProgressStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.abs
 
 /** Where the player currently is. Hand-rolled routing: one sealed type beats a nav library here. */
 sealed interface Screen {
@@ -168,6 +169,7 @@ class GameViewModel(app: Application) : ViewModel() {
 
     fun startStory(levelId: String) {
         tap()
+        armTutorial(levelId)
         mode = GameMode.STORY
         currentChallenge = ChallengeModifier.NONE
         val spec = levels.load(levelId)
@@ -224,6 +226,69 @@ class GameViewModel(app: Application) : ViewModel() {
     fun restartLevel() { tap(); input.clear(); engine.restartLevel() }
     fun bankTake() { engine.endTakeNow() }
 
+    // ---- first-run coach ---------------------------------------------------------------
+
+    private val coach = CoachMachine()
+    private val _tutorial = MutableStateFlow(TutorialStep.NONE)
+    val tutorial: StateFlow<TutorialStep> = _tutorial.asStateFlow()
+
+    /**
+     * Advances the coach when the player *does* the thing, never on a timer.
+     *
+     * Fed once per simulation step with that step's sampled input, so the held-jump threshold is
+     * counted in ticks and means the same on a 60 Hz phone as on a 120 Hz one. The decision logic
+     * lives in [CoachMachine] rather than here so it can be tested without a device.
+     */
+    fun tickTutorial(jumpHeld: Boolean) {
+        if (coach.step == TutorialStep.NONE || coach.step == TutorialStep.DONE) return
+        val w = engine.world ?: return
+        val completed = coach.tick(
+            distanceFromSpawn = abs(w.player.x - w.level.spawn.x),
+            onGround = w.player.onGround,
+            jumpHeld = jumpHeld,
+            echoCount = w.echoCount,
+        )
+        if (completed) store.save(store.load().copy(tutorialDone = true))
+        if (_tutorial.value != coach.step) _tutorial.value = coach.step
+    }
+
+    /** Clears the closing card. Progress was already persisted when the last step completed. */
+    fun dismissTutorial() {
+        coach.dismiss()
+        _tutorial.value = coach.step
+    }
+
+    /**
+     * Arms the coach for the room being entered, resuming whatever lesson is still owed.
+     *
+     * The coach spans **two** rooms, which is not an arbitrary choice: 1-1 is authored with
+     * `maxEchoes = 0`, a deliberate single-take room, so the banking lesson is physically
+     * impossible there — an earlier version stalled on it forever and never marked itself done.
+     * 1-2 is where the game hands over its first Echo, so that is where banking is taught.
+     *
+     * Lessons resume rather than reset, so a player who reaches 1-2 without having held a jump
+     * still gets that lesson first, and the machine walks the rest of the way on its own.
+     */
+    private fun armTutorial(levelId: String) {
+        val owed = when {
+            store.load().tutorialDone -> TutorialStep.NONE
+            levelId != FIRST_ROOM && levelId != ECHO_ROOM -> TutorialStep.NONE
+            coach.step == TutorialStep.NONE || coach.step == TutorialStep.DONE -> TutorialStep.MOVE
+            else -> coach.step
+        }
+        coach.arm(owed)
+        _tutorial.value = coach.step
+    }
+
+    /** True when there is an Echo on the stack to take back. */
+    fun canDiscardEcho(): Boolean = (engine.world?.echoes?.size ?: 0) > 0
+
+    fun discardLastEcho() {
+        tap()
+        input.clear()
+        engine.discardLastEcho()
+    }
+
     /**
      * Called once when the engine reports the exit was reached.
      *
@@ -241,7 +306,11 @@ class GameViewModel(app: Application) : ViewModel() {
             GameMode.STORY -> {
                 // Rated from THIS run's takes and deaths, not the stored totals: `deaths` in the
                 // record is a lifetime counter, so it cannot say whether the best run was clean.
+                // Undo is free for progression but priced for pride: unpicking a plan mid-solve
+                // still clears the room and unlocks the next, but three stars should mean the
+                // plan was right before it was committed to, so an undone run caps at two.
                 val stars = Rating.starsFor(takes, spec.parTakes, deaths)
+                    .let { if (world.undosUsed > 0) minOf(it, 2) else it }
                 lastStars = stars
                 store.updateLevel(spec.id) { existing ->
                     existing.copy(
@@ -329,6 +398,16 @@ class GameViewModel(app: Application) : ViewModel() {
     }
 
     companion object {
+        /** The only room the coach runs in. */
+        private const val FIRST_ROOM = "1-1"
+
+        /**
+         * Where the banking lesson happens.
+         *
+         * 1-1 is authored `maxEchoes = 0`, so it cannot host it — this is the first room that
+         * grants an Echo at all, and it is named "Hold The Line" for exactly that reason.
+         */
+        private const val ECHO_ROOM = "1-2"
         /** Attempts after which the next room unlocks even without a clear. */
         const val ATTEMPTS_TO_UNLOCK = 3
 

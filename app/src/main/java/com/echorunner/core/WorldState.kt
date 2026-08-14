@@ -293,6 +293,15 @@ class WorldState(val level: LevelSpec) {
 
     /** 0-based index of the take in progress. Take 0 runs with no Echoes. */
     var takeIndex = 0
+
+    /**
+     * Echoes discarded this attempt.
+     *
+     * Tracked because undo is free for *progression* but not for *pride*: a room you unpicked
+     * three times is solved, and the next room unlocks, but three stars should still mean you
+     * saw the whole plan before committing to it.
+     */
+    var undosUsed = 0
     /** Ticks elapsed in the current take. */
     var tick = 0
     var deaths = 0
@@ -341,6 +350,7 @@ class WorldState(val level: LevelSpec) {
     fun resetLevel() {
         echoes.clear()
         takeIndex = 0
+        undosUsed = 0
         deaths = 0
         totalSeconds = 0f
         lastTakeEnd = null

@@ -43,6 +43,8 @@ import com.echorunner.engine.StepAccumulator
 import com.echorunner.render.GameRenderer
 import com.echorunner.render.Palette
 import kotlin.math.ceil
+import androidx.compose.runtime.collectAsState
+import kotlinx.coroutines.delay
 
 /**
  * The playable screen: fixed-step simulation, interpolated rendering, HUD and phase overlays.
@@ -77,7 +79,14 @@ fun GameScreen(
                 if (last != 0L) {
                     val elapsed = ((now - last).toDouble() / 1_000_000_000.0).toFloat()
                     val steps = acc.stepsFor(elapsed)
-                    repeat(steps) { vm.engine.step(vm.input.sample()) }
+                    repeat(steps) {
+                        val sampled = vm.input.sample()
+                        vm.engine.step(sampled)
+                        // Fed per simulation step, not per frame: the coach's hold threshold is
+                        // counted in ticks, and a 120 Hz display would otherwise clear the lesson
+                        // in half the intended hold while a 30 Hz one demanded twice.
+                        vm.tickTutorial(sampled.jumpHeld)
+                    }
                     alpha = acc.alpha
                     clock += elapsed
                     frame = now
@@ -121,11 +130,33 @@ fun GameScreen(
         Canvas(Modifier.fillMaxSize()) {
             frame // subscribe: forces a redraw every frame
             val world = vm.engine.world ?: return@Canvas
-            renderer.draw(this, world, alpha, settings, clock)
+            // The controls and the HUD get their columns first; the world takes what is left.
+            // Derived here rather than inside the renderer so exactly one rule decides the
+            // layout and the overlap tests can call the same function the game does.
+            val playfield = ControlLayout.playfield(
+                screenW = size.width,
+                screenH = size.height,
+                density = density,
+                controlScale = settings.controlScale,
+                leftHanded = settings.leftHanded,
+            )
+            renderer.draw(this, world, alpha, settings, clock, playfield)
         }
 
         if (!GameEngineOverlay.blocksControls(phase, paused)) {
             TouchControls(vm.input, settings)
+        }
+
+        val coach by vm.tutorial.collectAsState()
+        if (!paused && phase != GamePhase.INTRO) TutorialCoach(coach)
+        if (coach == TutorialStep.DONE) {
+            LaunchedEffect(coach) {
+                // Long enough to read the sentence that names the loop, short enough that it never
+                // becomes furniture. Progress was persisted when the step completed, so a player
+                // who quits during this card still never sees the coach again.
+                delay(4200)
+                vm.dismissTutorial()
+            }
         }
 
         Hud(
@@ -146,9 +177,11 @@ fun GameScreen(
             paused -> PauseOverlay(
                 level = level,
                 canSkip = vm.canSkipCurrent(),
+                canDiscardEcho = vm.canDiscardEcho(),
                 onResume = vm::togglePause,
                 onRestartTake = { vm.togglePause(); vm.restartTake() },
                 onRestartLevel = { vm.togglePause(); vm.restartLevel() },
+                onDiscardEcho = { vm.togglePause(); vm.discardLastEcho() },
                 onSkip = vm::skipCurrent,
                 onQuit = vm::openMenu,
             )
@@ -459,9 +492,11 @@ private fun Banner(title: String, subtitle: String, tint: Color) {
 private fun PauseOverlay(
     level: LevelSpec?,
     canSkip: Boolean,
+    canDiscardEcho: Boolean,
     onResume: () -> Unit,
     onRestartTake: () -> Unit,
     onRestartLevel: () -> Unit,
+    onDiscardEcho: () -> Unit,
     onSkip: () -> Unit,
     onQuit: () -> Unit,
 ) {
@@ -482,6 +517,9 @@ private fun PauseOverlay(
             Spacer(Modifier.height(28.dp))
             MenuAction("RESUME", Ui.accent, onResume)
             MenuAction("RESTART TAKE", Ui.textDim, onRestartTake)
+            // Sits above RESTART ROOM on purpose: it is the cheaper of the two recoveries, and a
+            // player reaching for "start over" should read the option that costs one Echo first.
+            if (canDiscardEcho) MenuAction("UNDO LAST ECHO", Ui.echo, onDiscardEcho)
             MenuAction("RESTART ROOM", Ui.textDim, onRestartLevel)
             // Appears only after the room has been tried several times. A puzzle that has beaten
             // you should not also confiscate the rest of the game.
