@@ -140,6 +140,17 @@ data class GameSettings(
     val showEchoTrails: Boolean = true,
     /** Caps particles and disables fog for weaker devices. */
     val reducedEffects: Boolean = false,
+    /**
+     * Distinguishes Echoes by luminance and outline pattern instead of hue alone.
+     *
+     * Telling one timeline from another is a *mechanical* requirement here, not a cosmetic one:
+     * a Chapter 6 solve has four Echoes on screen and the player must know which is about to
+     * step off a plate. The default palette separates them by hue, which is exactly the channel
+     * red-green colour blindness removes — roughly one man in twelve. This swaps in an
+     * Okabe-Ito set that also separates by lightness, and gives each timeline its own outline
+     * pattern so the cue survives even in full greyscale.
+     */
+    val colorBlindSafe: Boolean = false,
 )
 
 data class GameProgress(
@@ -149,6 +160,8 @@ data class GameProgress(
     val settings: GameSettings = GameSettings(),
     /** Chapters whose opening cinematic has been shown, so it is not replayed. */
     val seenCinematics: Set<Int> = emptySet(),
+    /** The first-run coach has been completed once, so it never returns. */
+    val tutorialDone: Boolean = false,
 ) {
     fun record(levelId: String): LevelRecord = levels[levelId] ?: LevelRecord(levelId)
     fun isCompleted(levelId: String): Boolean = levels[levelId]?.completed == true

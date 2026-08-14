@@ -93,6 +93,41 @@ class GameEngine(
     }
 
     /** Ends the take early, banking what the player did so far as an Echo. */
+    /**
+     * Drops the newest Echo and restarts the take with its budget returned.
+     *
+     * Before this existed, one misjudged take in a five-Echo room cost the whole room: the only
+     * way out of a bad plan was RESTART ROOM, which threw away every Echo including the four that
+     * were right. That is a punishing price for experimenting, and experimenting is how this
+     * game is meant to be learned.
+     *
+     * Undo is deliberately *last-in only*. Echoes are choreographed against each other in
+     * lockstep from tick 0, so removing one from the middle would silently re-index every Echo
+     * after it and desynchronise a plan the player had already got right. A stack is the only
+     * shape that cannot corrupt a working plan.
+     *
+     * Allowed while OUT_OF_ECHOES as well as during play, because that is exactly the moment a
+     * player realises the last Echo was the mistake.
+     */
+    fun discardLastEcho(): Boolean {
+        val w = world ?: return false
+        if (w.echoes.isEmpty()) return false
+        if (w.phase != GamePhase.PLAYING && w.phase != GamePhase.OUT_OF_ECHOES) return false
+
+        w.echoes.removeAt(w.echoes.lastIndex)
+        // takeIndex is the budget counter, so it follows the stack rather than the other way round.
+        w.takeIndex = w.echoes.size
+        w.undosUsed++
+        w.lastTakeEnd = null
+        w.resetTake()
+        w.phase = GamePhase.PLAYING
+        w.phaseTimer = 0f
+        recorder.beginTake()
+        audio.play(SoundCue.ECHO_EXPIRE)
+        haptics.fire(HapticEvent.ECHO_CREATED)
+        return true
+    }
+
     fun endTakeNow() {
         val w = world ?: return
         if (w.phase == GamePhase.PLAYING) endTake(w, TakeEndReason.MANUAL)

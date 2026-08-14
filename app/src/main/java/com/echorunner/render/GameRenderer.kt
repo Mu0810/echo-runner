@@ -28,6 +28,7 @@ import com.echorunner.core.Rect
 import com.echorunner.core.TeleporterState
 import com.echorunner.core.TurretState
 import com.echorunner.core.WalkerState
+import com.echorunner.core.Viewport
 import com.echorunner.core.WorldState
 import com.echorunner.core.clamp
 import kotlin.math.cos
@@ -134,34 +135,44 @@ class GameRenderer {
         alpha: Float,
         settings: GameSettings,
         timeSeconds: Float,
+        playfield: Viewport,
     ) {
         with(scope) {
             if (size.width < 1f || size.height < 1f) return
+            if (playfield.width < 1f || playfield.height < 1f) return
             ensureCache(size.width, size.height, density)
-            computeTransform(world)
+            computeTransform(world, playfield)
             bodyCorner = CornerRadius(wu(0.15f))
 
             val frac = clamp(alpha, 0f, 1f)
             val camX = world.camera.x
 
+            // The void fills the entire screen so the reserved margins read as depth rather
+            // than as black bars, but everything that belongs to the room is clipped to the
+            // playfield — an unclipped grid would draw floor-looking lines in a region the
+            // player can never reach, which is exactly the mistake the old camera clamp was
+            // there to prevent.
             drawRect(brush = backdrop)
-            drawGrid(camX, timeSeconds)
-            if (!settings.reducedEffects) drawFog(camX, timeSeconds)
+            clipRect(playfield.left, playfield.top, playfield.right, playfield.bottom) {
+                drawGrid(camX, timeSeconds)
+                if (!settings.reducedEffects) drawFog(camX, timeSeconds)
 
-            drawTeleporters(world, timeSeconds)
-            drawPlates(world, timeSeconds)
-            drawLasers(world)
-            drawMovers(world, frac)
-            drawPlatforms(world)
-            drawHazards(world)
-            drawDoors(world)
-            drawTurrets(world, timeSeconds)
-            drawWalkers(world, frac)
-            drawBullets(world)
-            drawExit(world, timeSeconds)
-            drawEchoes(world, frac, settings, timeSeconds)
-            drawPlayer(world.player, frac)
-            drawParticles(world, settings)
+                drawTeleporters(world, timeSeconds)
+                drawPlates(world, timeSeconds)
+                drawLasers(world)
+                drawMovers(world, frac)
+                drawPlatforms(world)
+                drawHazards(world)
+                drawDoors(world)
+                drawTurrets(world, timeSeconds)
+                drawWalkers(world, frac)
+                drawBullets(world)
+                drawExit(world, timeSeconds)
+                drawEchoes(world, frac, settings, timeSeconds)
+                drawPlayer(world.player, frac)
+                drawParticles(world, settings)
+            }
+            drawPlayfieldEdge(playfield, timeSeconds)
 
             vignette?.let { drawRect(brush = it) }
         }
@@ -170,30 +181,76 @@ class GameRenderer {
     // ---- Transform --------------------------------------------------------------------
 
     /**
-     * Fits the world's **height** to the viewport and follows the camera horizontally.
+     * Maps world units into the reserved [playfield] rectangle.
      *
-     * Height-fit rather than letterbox is a playability decision: the vertical extent of a
-     * level is fixed at [GameConstants.WORLD_H], so every jump reads at the same on-screen
-     * size on every device, and no black bars eat the void. Horizontally the view is clamped
-     * inside `0..WORLD_W` so the player never sees past the level edge and mistakes empty
-     * space for somewhere to go; when the whole world is narrower than the viewport there is
-     * nothing to follow, so it is centred instead.
+     * The world used to be fitted to screen *height* and centred on the full canvas, which put
+     * 4.4 units of level under the stick and 4.7 under the action arc — including the exit
+     * portal on 22 of the 30 levels. [ControlLayout] now hands down a box that excludes the
+     * controls and the HUD, and the whole room is fitted inside it.
+     *
+     * Because the fit is uniform and the box always receives all [GameConstants.WORLD_W] units,
+     * there is no horizontal follow to do: every level is one screen by design. `camera.x` still
+     * drives parallax, and shake is still applied here rather than to bodies, per Camera's
+     * contract that the simulation never moves for a visual effect.
      */
-    private fun DrawScope.computeTransform(world: WorldState) {
-        scale = size.height / GameConstants.WORLD_H
-        val worldPx = GameConstants.WORLD_W * scale
-        originX = if (worldPx <= size.width) {
-            (size.width - worldPx) * 0.5f
-        } else {
-            val halfView = size.width * 0.5f / scale
-            val focus = clamp(world.camera.x, halfView, GameConstants.WORLD_W - halfView)
-            size.width * 0.5f - focus * scale
-        }
-        originY = 0f
+    private fun DrawScope.computeTransform(world: WorldState, playfield: Viewport) {
+        scale = playfield.width / GameConstants.WORLD_W
+        originX = playfield.left
+        originY = playfield.top
 
         // Shake is render-only, per Camera's contract: bodies are never moved.
         originX += world.camera.shakeOffsetX * scale
         originY += world.camera.shakeOffsetY * scale
+    }
+
+    /**
+     * Draws the boundary of the room: a hairline edge, a breathing bloom just inside it, and
+     * four corner brackets.
+     *
+     * Reserving margins for the controls means the world stops short of the screen, and an
+     * unmarked stop looks like a rendering bug. Marking it turns the same pixels into a
+     * containment field — the room is a chamber you are sealed inside for thirty seconds,
+     * which is what the fiction says it is. The brackets pulse on the same clock as the exit
+     * portal so the whole frame feels like one machine.
+     */
+    private fun DrawScope.drawPlayfieldEdge(playfield: Viewport, timeSeconds: Float) {
+        val pulse = 0.5f + 0.5f * sin(timeSeconds * 1.1f)
+        val topLeft = Offset(playfield.left, playfield.top)
+        val size = Size(playfield.width, playfield.height)
+
+        drawRect(
+            color = Palette.gridLine.copy(alpha = 0.55f + 0.15f * pulse),
+            topLeft = topLeft,
+            size = size,
+            style = Stroke(width = hairPx),
+        )
+
+        // Bracket length scales with the room so it reads the same on any device.
+        val arm = playfield.width * 0.045f
+        val corners = listOf(
+            Triple(playfield.left, playfield.top, 1f to 1f),
+            Triple(playfield.right, playfield.top, -1f to 1f),
+            Triple(playfield.left, playfield.bottom, 1f to -1f),
+            Triple(playfield.right, playfield.bottom, -1f to -1f),
+        )
+        val bracket = Palette.player.copy(alpha = 0.20f + 0.16f * pulse)
+        for ((x, y, dir) in corners) {
+            val (dx, dy) = dir
+            drawLine(
+                color = bracket,
+                start = Offset(x, y),
+                end = Offset(x + arm * dx, y),
+                strokeWidth = edgePx,
+                cap = StrokeCap.Round,
+            )
+            drawLine(
+                color = bracket,
+                start = Offset(x, y),
+                end = Offset(x, y + arm * dy),
+                strokeWidth = edgePx,
+                cap = StrokeCap.Round,
+            )
+        }
     }
 
     private fun wx(worldX: Float): Float = originX + worldX * scale
@@ -911,7 +968,7 @@ class GameRenderer {
     ) {
         for (i in world.echoes.indices) {
             val echo: EchoBody = world.echoes[i]
-            val hue = Palette.echo(echo.index)
+            val hue = if (settings.colorBlindSafe) Palette.echoSafe(echo.index) else Palette.echo(echo.index)
             val live = echo.active
             val wobble = if (live) sin(time * 5.3f + echo.index * 1.9f) * 0.032f else 0f
             val dim = if (live) 1f else 0.55f
@@ -936,6 +993,25 @@ class GameRenderer {
             val ey = echo.renderY(frac)
             val vy = echo.replay.vy(echo.tick)
             shapeBody(ex, ey, vy, echo.anim)
+
+            // In colour-blind-safe mode each timeline also gets its own outline pattern, so the
+            // identity of an Echo survives greyscale and every form of colour vision deficiency.
+            if (settings.colorBlindSafe) {
+                val dash = Palette.echoDashPattern(echo.index)
+                drawRoundRect(
+                    color = hue,
+                    topLeft = Offset(wx(bx), wy(by)),
+                    size = Size(wu(bw), wu(bh)),
+                    cornerRadius = bodyCorner,
+                    alpha = 0.95f * dim,
+                    style = Stroke(
+                        width = boldPx,
+                        pathEffect = dash?.let {
+                            PathEffect.dashPathEffect(FloatArray(it.size) { i -> wu(it[i]) }, 0f)
+                        },
+                    ),
+                )
+            }
 
             softGlow(
                 cx = wx(bx + bw * 0.5f),

@@ -380,7 +380,9 @@ class ProgressStore(context: Context) : ProgressRepository {
         settings.put("controlScale", finite(s.controlScale, DEFAULT_SETTINGS.controlScale).toDouble())
         settings.put("showEchoTrails", s.showEchoTrails)
         settings.put("reducedEffects", s.reducedEffects)
+        settings.put("colorBlindSafe", s.colorBlindSafe)
         root.put("settings", settings)
+        root.put("tutorialDone", progress.tutorialDone)
 
         val cinematics = JSONArray()
         for (chapter in progress.seenCinematics.sorted()) cinematics.put(chapter)
@@ -455,6 +457,7 @@ class ProgressStore(context: Context) : ProgressRepository {
                 ),
                 showEchoTrails = settingsJson.optBoolean("showEchoTrails", d.showEchoTrails),
                 reducedEffects = settingsJson.optBoolean("reducedEffects", d.reducedEffects),
+                colorBlindSafe = settingsJson.optBoolean("colorBlindSafe", d.colorBlindSafe),
             )
         }
 
@@ -472,6 +475,7 @@ class ProgressStore(context: Context) : ProgressRepository {
             challengesCompleted = challenges,
             settings = settings,
             seenCinematics = cinematics,
+            tutorialDone = root.optBoolean("tutorialDone", false),
         )
     }
 

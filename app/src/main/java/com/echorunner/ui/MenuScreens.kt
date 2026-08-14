@@ -329,6 +329,9 @@ fun SettingsScreen(vm: GameViewModel, settings: GameSettings) {
                     Toggle("ECHO TRAILS", settings.showEchoTrails) { on ->
                         vm.updateSettings { it.copy(showEchoTrails = on) }
                     }
+                    Toggle("COLOUR-BLIND SAFE", settings.colorBlindSafe) { on ->
+                        vm.updateSettings { it.copy(colorBlindSafe = on) }
+                    }
                     Toggle("REDUCED EFFECTS", settings.reducedEffects) { on ->
                         vm.updateSettings { it.copy(reducedEffects = on) }
                     }

@@ -66,17 +66,25 @@ fun TouchControls(
         val stick: @Composable () -> Unit = {
             Joystick(
                 input = input,
-                diameter = 150.dp * scale,
+                diameter = ControlLayout.STICK_DP.dp * scale,
                 // Sit as close to the screen edge as comfort allows, so as much of the control
                 // as possible lives in the letterbox column rather than over the level.
-                modifier = Modifier.padding(start = 14.dp, end = 14.dp, bottom = 18.dp),
+                modifier = Modifier.padding(
+                    start = ControlLayout.EDGE_PAD_DP.dp,
+                    end = ControlLayout.EDGE_PAD_DP.dp,
+                    bottom = ControlLayout.BOTTOM_PAD_DP.dp,
+                ),
             )
         }
         val actions: @Composable () -> Unit = {
             ActionCluster(
                 input = input,
                 scale = scale,
-                modifier = Modifier.padding(start = 14.dp, end = 14.dp, bottom = 18.dp),
+                modifier = Modifier.padding(
+                    start = ControlLayout.EDGE_PAD_DP.dp,
+                    end = ControlLayout.EDGE_PAD_DP.dp,
+                    bottom = ControlLayout.BOTTOM_PAD_DP.dp,
+                ),
             )
         }
 
@@ -183,11 +191,11 @@ private fun ActionCluster(
     scale: Float,
     modifier: Modifier = Modifier,
 ) {
-    val jump = 96.dp * scale
-    val dash = 74.dp * scale
-    val use = 62.dp * scale
-    val gap = 9.dp * scale
-    val inset = 11.dp * scale
+    val jump = ControlLayout.JUMP_DP.dp * scale
+    val dash = ControlLayout.DASH_DP.dp * scale
+    val use = ControlLayout.USE_DP.dp * scale
+    val gap = ControlLayout.GAP_DP.dp * scale
+    val inset = ControlLayout.ARC_INSET_DP.dp * scale
 
     // Geometry is written as explicit non-overlapping offsets rather than proportions, because
     // proportional guesses produced overlapping hit areas — two buttons sharing pixels means a
